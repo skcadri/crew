@@ -1,19 +1,19 @@
 {
   "": {
-    "swift-dependencies": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/master.swiftdeps"
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/master.swiftdeps"
   },
-  "/Users/sohaib/crew/Tests/CrewTests/AgentTests.swift": {
-    "dependencies": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.d",
-    "object": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.swift.o",
-    "swiftmodule": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests~partial.swiftmodule",
-    "swift-dependencies": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.swiftdeps",
-    "diagnostics": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.dia"
+  "/Users/sohaib/crew-worktrees/worker-1/Tests/CrewTests/AgentTests.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/AgentTests.dia"
   },
-  "/Users/sohaib/crew/Tests/CrewTests/DatabaseTests.swift": {
-    "dependencies": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.d",
-    "object": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.swift.o",
-    "swiftmodule": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests~partial.swiftmodule",
-    "swift-dependencies": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.swiftdeps",
-    "diagnostics": "/Users/sohaib/crew/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.dia"
+  "/Users/sohaib/crew-worktrees/worker-1/Tests/CrewTests/DatabaseTests.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.dia"
   }
 }
