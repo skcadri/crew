@@ -1,0 +1,1986 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.xctest/Contents/MacOS/CrewPackageTests",
+      "packagePath" : "/Users/sohaib/crew-worktrees/worker-1",
+      "productName" : "CrewPackageTests"
+    }
+  ],
+  "copyCommands" : {
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.swift_SQLite.bundle/PrivacyInfo.xcprivacy" : {
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/PrivacyInfo.xcprivacy"
+        }
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.swift_SQLite.bundle/PrivacyInfo.xcprivacy"
+        }
+      ]
+    }
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.Crew-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/sources",
+      "importPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/AgentType.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/ChatMessage.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Repository.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Worktree.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/main.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/SQLite.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "Crew",
+      "moduleOutputPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/Crew.swiftmodule",
+      "objects" : [
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j32",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "Crew_main",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "worker_1"
+      ],
+      "outputFileMapPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/Crew.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/AgentType.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/ChatMessage.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Repository.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Worktree.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/main.swift"
+      ],
+      "tempsPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.CrewPackageTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/sources",
+      "importPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/CrewTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "CrewPackageTests",
+      "moduleOutputPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/CrewPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j32",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/include/CrewPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "worker_1"
+      ],
+      "outputFileMapPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/CrewPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.CrewTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/sources",
+      "importPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Tests/CrewTests/DatabaseTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "CrewTests",
+      "moduleOutputPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/CrewTests.swiftmodule",
+      "objects" : [
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j32",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "worker_1"
+      ],
+      "outputFileMapPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/CrewTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/sohaib/crew-worktrees/worker-1/Tests/CrewTests/DatabaseTests.swift"
+      ],
+      "tempsPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SQLite-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/sources",
+      "importPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Backup.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Blob.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Aggregation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Attach.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Pragmas.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Errors.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Result.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteFeature.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteVersion.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Statement.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/URIQueryParameter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Value.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/Cipher.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS4.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS5.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/RTree.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Foundation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Helpers.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/Connection+Schema.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaChanger.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaDefinitions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaReader.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/AggregateFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Coding.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Collation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CoreFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CustomFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/DateAndTimeFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Expression.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Operators.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query+with.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Schema.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Setter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/WindowFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DerivedSources/resource_bundle_accessor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<SQLite-arm64-apple-macosx26.0-debug.module-resources>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SQLite",
+      "moduleOutputPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/SQLite.swiftmodule",
+      "objects" : [
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Backup.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Blob.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Aggregation.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Attach.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Pragmas.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Errors.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Result.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteFeature.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteVersion.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Statement.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/URIQueryParameter.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Value.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Cipher.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS4.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS5.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/RTree.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Foundation.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Helpers.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Schema.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaChanger.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaDefinitions.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaReader.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/AggregateFunctions.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Coding.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Collation.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CoreFunctions.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CustomFunctions.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DateAndTimeFunctions.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Expression.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Operators.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query+with.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Schema.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Setter.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/WindowFunctions.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/resource_bundle_accessor.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j32",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE",
+        "-module-cache-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/include/SQLite-Swift.h",
+        "-swift-version",
+        "5",
+        "-DSystemSQLite",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-suppress-warnings",
+        "-user-module-version",
+        "0.15.5",
+        "-package-name",
+        "sqlite_swift"
+      ],
+      "outputFileMapPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Backup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Blob.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Aggregation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Attach.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Pragmas.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Errors.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Result.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteFeature.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteVersion.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Statement.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/URIQueryParameter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Value.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Cipher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS4.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS5.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/RTree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Foundation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Helpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaChanger.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaDefinitions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaReader.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/AggregateFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Coding.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Collation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CoreFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CustomFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DateAndTimeFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Expression.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Operators.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query+with.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Setter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/WindowFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/resource_bundle_accessor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/SQLite.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Backup.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Blob.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Aggregation.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Attach.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Pragmas.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Errors.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Result.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteFeature.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteVersion.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Statement.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/URIQueryParameter.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Value.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/Cipher.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS4.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS5.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/RTree.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Foundation.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Helpers.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/Connection+Schema.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaChanger.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaDefinitions.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaReader.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/AggregateFunctions.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Coding.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Collation.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CoreFunctions.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CustomFunctions.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/DateAndTimeFunctions.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Expression.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Operators.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query+with.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Schema.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Setter.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/WindowFunctions.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DerivedSources/resource_bundle_accessor.swift"
+      ],
+      "tempsPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "Crew" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Crew",
+      "-package-name",
+      "worker_1",
+      "-c",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/AgentType.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/ChatMessage.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Repository.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Worktree.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/main.swift",
+      "-I",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j32",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "Crew_main",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "worker_1",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "CrewPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "CrewPackageTests",
+      "-package-name",
+      "worker_1",
+      "-c",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j32",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/include/CrewPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "worker_1",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "CrewTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "CrewTests",
+      "-package-name",
+      "worker_1",
+      "-c",
+      "/Users/sohaib/crew-worktrees/worker-1/Tests/CrewTests/DatabaseTests.swift",
+      "-I",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j32",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "worker_1",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SQLite" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SQLite",
+      "-package-name",
+      "sqlite_swift",
+      "-c",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Backup.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Blob.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Aggregation.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Attach.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Pragmas.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Errors.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Result.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteFeature.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteVersion.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Statement.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/URIQueryParameter.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Value.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/Cipher.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS4.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS5.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/RTree.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Foundation.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Helpers.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/Connection+Schema.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaChanger.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaDefinitions.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaReader.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/AggregateFunctions.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Coding.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Collation.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CoreFunctions.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CustomFunctions.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/DateAndTimeFunctions.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Expression.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Operators.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query+with.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Schema.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Setter.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/WindowFunctions.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DerivedSources/resource_bundle_accessor.swift",
+      "-I",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j32",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_AVAILABLE",
+      "-module-cache-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/include/SQLite-Swift.h",
+      "-swift-version",
+      "5",
+      "-DSystemSQLite",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-suppress-warnings",
+      "-user-module-version",
+      "0.15.5",
+      "-package-name",
+      "sqlite_swift",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "Crew" : [
+      "SQLite"
+    ],
+    "CrewPackageTests" : [
+      "CrewTests",
+      "Crew",
+      "SQLite"
+    ],
+    "CrewTests" : [
+      "Crew",
+      "SQLite"
+    ],
+    "SQLite" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew-entitlement.plist" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<entitlement-plist>"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<com.apple.security.get-task-allow>"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew-entitlement.plist"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/AgentType.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/ChatMessage.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Repository.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Worktree.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/main.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/sources"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/AggregateFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Backup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Blob.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Cipher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Coding.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Collation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Aggregation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Attach.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Pragmas.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CoreFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CustomFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DateAndTimeFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Errors.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Expression.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS4.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS5.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Foundation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Helpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Operators.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query+with.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/RTree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Result.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteFeature.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteVersion.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaChanger.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaDefinitions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaReader.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Setter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Statement.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/URIQueryParameter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Value.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/WindowFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/resource_bundle_accessor.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.product/Objects.LinkFileList"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/sources"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/DatabaseTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/AggregateFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Backup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Blob.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Cipher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Coding.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Collation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Aggregation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Attach.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Pragmas.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CoreFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CustomFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DateAndTimeFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Errors.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Expression.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS4.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS5.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Foundation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Helpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Operators.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query+with.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/RTree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Result.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteFeature.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteVersion.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaChanger.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaDefinitions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaReader.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Setter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Statement.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/URIQueryParameter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Value.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/WindowFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/resource_bundle_accessor.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Tests/CrewTests/DatabaseTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/CrewTests.build/sources"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite-Dynamic.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/AggregateFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Backup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Blob.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Cipher.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Coding.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Collation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Aggregation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Attach.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Pragmas.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection+Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Connection.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CoreFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/CustomFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DateAndTimeFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Errors.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Expression.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS4.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/FTS5.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Foundation.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Helpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Operators.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query+with.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Query.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/RTree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Result.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteFeature.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SQLiteVersion.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Schema.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaChanger.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaDefinitions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/SchemaReader.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Setter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Statement.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/URIQueryParameter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/Value.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/WindowFunctions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/resource_bundle_accessor.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite-Dynamic.product/Objects.LinkFileList"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Backup.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Blob.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Aggregation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Attach.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection+Pragmas.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Connection.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Errors.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Result.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteFeature.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/SQLiteVersion.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Statement.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/URIQueryParameter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Core/Value.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/Cipher.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS4.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/FTS5.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Extensions/RTree.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Foundation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Helpers.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/Connection+Schema.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaChanger.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaDefinitions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Schema/SchemaReader.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/AggregateFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Coding.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Collation.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CoreFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/CustomFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/DateAndTimeFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Expression.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Operators.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query+with.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Query.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Schema.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/Setter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/checkouts/SQLite.swift/Sources/SQLite/Typed/WindowFunctions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/DerivedSources/resource_bundle_accessor.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.build/sources"
+    },
+    "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

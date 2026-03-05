@@ -6,6 +6,9 @@ let package = Package(
     platforms: [
         .macOS(.v14)
     ],
+    products: [
+        .executable(name: "Crew", targets: ["Crew"])
+    ],
     dependencies: [
         .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.15.3"),
         .package(url: "https://github.com/raspu/Highlightr.git", from: "2.2.1"),
@@ -21,6 +24,11 @@ let package = Package(
             swiftSettings: [
                 .unsafeFlags(["-parse-as-library"])
             ]
+        ),
+        .testTarget(
+            name: "CrewTests",
+            dependencies: ["Crew"],
+            path: "Tests/CrewTests"
         )
     ]
 )

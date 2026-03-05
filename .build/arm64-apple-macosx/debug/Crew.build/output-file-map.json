@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/master.swiftdeps"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/AgentType.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/ChatMessage.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Repository.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Worktree.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/main.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/main.dia"
+  }
+}
