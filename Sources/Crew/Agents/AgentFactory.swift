@@ -13,6 +13,18 @@ public enum AgentFactory {
     /// `UserDefaults` key for the Claude binary path override.
     public static let claudePathKey = "claudeBinaryPath"
 
+    /// `UserDefaults` key for the OpenAI API key (Codex).
+    public static let openAIAPIKeyKey = "openAIAPIKey"
+
+    /// `UserDefaults` key for the Codex model name override.
+    public static let codexModelKey = "codexModel"
+
+    /// `UserDefaults` key for the LM Studio base URL override.
+    public static let lmStudioBaseURLKey = "lmStudioBaseURL"
+
+    /// `UserDefaults` key for the LM Studio model name override.
+    public static let lmStudioModelKey = "lmStudioModel"
+
     // MARK: Factory method
 
     /// Instantiate a `CodingAgent` for the requested type.
@@ -34,50 +46,20 @@ public enum AgentFactory {
             return ClaudeCodeAgent(id: id, claudePath: path)
 
         case .codex:
-            // TICKET-006 — CodexAgent will be implemented separately.
-            // For now we return a stub that immediately errors.
-            return StubAgent(id: id, agentType: .codex, errorMessage: "CodexAgent not yet implemented (TICKET-006)")
+            let model   = defaults.string(forKey: codexModelKey)    ?? CodexAgent.defaultModel
+            let baseURL = CodexAgent.defaultBaseURL
+            // API key resolution happens inside CodexAgent (env → UserDefaults).
+            let apiKey  = defaults.string(forKey: openAIAPIKeyKey)
+            return CodexAgent(id: id, model: model, baseURL: baseURL, apiKey: apiKey)
 
         case .lmStudio:
-            // TICKET-006 — LMStudioAgent will be implemented separately.
-            return StubAgent(id: id, agentType: .lmStudio, errorMessage: "LMStudioAgent not yet implemented (TICKET-006)")
+            let baseURL = defaults.string(forKey: lmStudioBaseURLKey) ?? LMStudioAgent.defaultBaseURL
+            // Default to the first available model name stored in UserDefaults;
+            // falls back to a generic placeholder that the user can update in Settings.
+            let model   = defaults.string(forKey: lmStudioModelKey)   ?? "local-model"
+            return LMStudioAgent(id: id, model: model, baseURL: baseURL)
         }
     }
 }
 
-// MARK: - StubAgent (placeholder for unimplemented types)
-
-/// Minimal `CodingAgent` that immediately emits an error then finishes.
-/// Removed once the real implementations land in TICKET-006.
-private final class StubAgent: CodingAgent, @unchecked Sendable {
-
-    let id: UUID
-    let type: AgentType
-    private let errorMessage: String
-    private(set) var isRunning: Bool = false
-
-    init(id: UUID, agentType: AgentType, errorMessage: String) {
-        self.id = id
-        self.type = agentType
-        self.errorMessage = errorMessage
-    }
-
-    func start(workdir: String, prompt: String) async throws -> AsyncStream<AgentEvent> {
-        makeErrorStream()
-    }
-
-    func send(message: String) async throws -> AsyncStream<AgentEvent> {
-        makeErrorStream()
-    }
-
-    func cancel() async { isRunning = false }
-
-    private func makeErrorStream() -> AsyncStream<AgentEvent> {
-        let msg = errorMessage
-        return AsyncStream { continuation in
-            continuation.yield(.error(msg))
-            continuation.yield(.done)
-            continuation.finish()
-        }
-    }
-}
+// StubAgent removed — CodexAgent and LMStudioAgent are now fully implemented (TICKET-006).
