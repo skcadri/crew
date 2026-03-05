@@ -1,10 +1,7 @@
-// Crew — entry point placeholder.
-// The real app entry point will be CrewApp.swift (SwiftUI @main) added in TICKET-001.
-// This file exists solely to satisfy the Swift package executable target requirement
-// during headless (non-Xcode) builds.
+// Crew — main entry point (placeholder; real UI in TICKET-001)
+// This file satisfies the Swift Package executable target requirement
+// until the SwiftUI app shell is wired up.
 
 import Foundation
 
-// Smoke-test: verify DB singleton can be created and tables initialised.
-let db = Database.shared
-print("Crew database ready at ~/Library/Application Support/Crew/crew.db")
+print("Crew agent layer loaded. (UI in TICKET-001)")

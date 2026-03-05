@@ -1,13 +1,15 @@
 import Foundation
 
-/// The type of coding agent that can be used in a workspace.
-enum AgentType: String, CaseIterable, Codable {
-    case claudeCode
-    case codex
-    case lmStudio
+/// The type of coding agent to spawn.
+public enum AgentType: String, Codable, CaseIterable, Identifiable {
+    case claudeCode = "claude_code"
+    case codex      = "codex"
+    case lmStudio   = "lm_studio"
 
-    /// Human-readable display name for the agent.
-    var displayName: String {
+    public var id: String { rawValue }
+
+    /// Human-readable display name.
+    public var displayName: String {
         switch self {
         case .claudeCode: return "Claude Code"
         case .codex:      return "Codex"
