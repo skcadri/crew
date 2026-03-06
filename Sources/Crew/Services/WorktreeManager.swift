@@ -31,6 +31,7 @@ final class WorktreeManager: ObservableObject {
     func loadWorktrees(repoId: UUID) {
         do {
             let repoWorktrees = try db.fetchWorktrees(forRepo: repoId)
+            ensureContextDirectories(for: repoWorktrees)
             // Replace entries for this repo; keep entries from other repos intact.
             let others = worktrees.filter { $0.repoId != repoId }
             worktrees = others + repoWorktrees
@@ -43,6 +44,7 @@ final class WorktreeManager: ObservableObject {
     func loadAllWorktrees() {
         do {
             worktrees = try db.fetchAllWorktrees()
+            ensureContextDirectories(for: worktrees)
         } catch {
             lastError = "Failed to load worktrees: \(error.localizedDescription)"
         }
@@ -67,6 +69,8 @@ final class WorktreeManager: ObservableObject {
             status:        .backlog,
             selectedModel: model?.rawValue
         )
+
+        _ = try ContextFileService.shared.ensureContextDirectory(workspacePath: path)
 
         try db.insertWorktree(worktree)
         worktrees.append(worktree)
@@ -113,5 +117,11 @@ final class WorktreeManager: ObservableObject {
 
     func transition(_ worktreeId: UUID, to status: WorktreeStatus) {
         updateStatus(id: worktreeId, status: status)
+    }
+
+    private func ensureContextDirectories(for worktrees: [Worktree]) {
+        for wt in worktrees {
+            _ = try? ContextFileService.shared.ensureContextDirectory(workspacePath: wt.path)
+        }
     }
 }

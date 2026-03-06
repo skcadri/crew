@@ -28,6 +28,7 @@ struct ContentView: View {
                     ChatView(
                         store: store,
                         worktreeId: worktree.id,
+                        workspacePath: worktree.path,
                         modelName: worktree.selectedModel
                     )
                 } else {
