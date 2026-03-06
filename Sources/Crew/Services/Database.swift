@@ -103,6 +103,12 @@ final class Database {
     private let phaseACommentPayload     = Expression<String>("payload_json")
     private let phaseACommentUpdatedAt   = Expression<Int64>("updated_at")
 
+    // ---- phase_b_workspace_state ----
+    private let phaseBWorkspaceState          = Table("phase_b_workspace_state")
+    private let phaseBWorkspaceStateWorkspaceId = Expression<String>("workspace_id")
+    private let phaseBWorkspaceStatePayload   = Expression<String>("payload_json")
+    private let phaseBWorkspaceStateUpdatedAt = Expression<Int64>("updated_at")
+
     // MARK: Init
 
     private init() {
@@ -149,6 +155,9 @@ final class Database {
             },
             SQLiteMigration(version: 2, label: "Phase A integration state") { [self] db in
                 try self.createPhaseAIntegrationTables(on: db)
+            },
+            SQLiteMigration(version: 3, label: "Phase B integration state") { [self] db in
+                try self.createPhaseBIntegrationTables(on: db)
             }
         ], on: db)
     }
@@ -247,6 +256,47 @@ final class Database {
             t.foreignKey(phaseACommentWorktreeId, references: worktrees, wtId, delete: .cascade)
             t.unique(phaseACommentWorktreeId, phaseACommentProvider, phaseACommentExternalId)
         })
+    }
+
+    private func createPhaseBIntegrationTables(on db: Connection) throws {
+        try db.run(phaseBWorkspaceState.create(ifNotExists: true) { t in
+            t.column(phaseBWorkspaceStateWorkspaceId, primaryKey: true)
+            t.column(phaseBWorkspaceStatePayload)
+            t.column(phaseBWorkspaceStateUpdatedAt)
+            t.foreignKey(phaseBWorkspaceStateWorkspaceId, references: worktrees, wtId, delete: .cascade)
+        })
+    }
+}
+
+// MARK: - Phase B Workspace State
+
+extension Database {
+
+    func upsertPhaseBWorkspaceState(_ state: PhaseBWorkspaceState) throws {
+        let encoder = JSONEncoder()
+        let payload = try String(decoding: encoder.encode(state), as: UTF8.self)
+        let now = Int64(Date().timeIntervalSince1970)
+
+        let row = phaseBWorkspaceState.filter(phaseBWorkspaceStateWorkspaceId == state.workspaceId.uuidString)
+        if try db.pluck(row) != nil {
+            try db.run(row.update(
+                phaseBWorkspaceStatePayload <- payload,
+                phaseBWorkspaceStateUpdatedAt <- now
+            ))
+        } else {
+            try db.run(phaseBWorkspaceState.insert(
+                phaseBWorkspaceStateWorkspaceId <- state.workspaceId.uuidString,
+                phaseBWorkspaceStatePayload <- payload,
+                phaseBWorkspaceStateUpdatedAt <- now
+            ))
+        }
+    }
+
+    func fetchPhaseBWorkspaceState(workspaceId: UUID) throws -> PhaseBWorkspaceState? {
+        let row = phaseBWorkspaceState.filter(phaseBWorkspaceStateWorkspaceId == workspaceId.uuidString)
+        guard let result = try db.pluck(row) else { return nil }
+        let payload = result[phaseBWorkspaceStatePayload]
+        return try JSONDecoder().decode(PhaseBWorkspaceState.self, from: Data(payload.utf8))
     }
 }
 
