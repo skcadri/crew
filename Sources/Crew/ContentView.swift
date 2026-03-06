@@ -6,6 +6,7 @@ struct ContentView: View {
     @State private var showAddWorkspaceSheet: Bool = false
 
     @ObservedObject private var worktreeManager = WorktreeManager.shared
+    @ObservedObject private var repoManager = RepoManager.shared
 
     /// Active ChatStore instances keyed by worktree UUID string
     @State private var chatStores: [String: ChatStore] = [:]
@@ -48,11 +49,37 @@ struct ContentView: View {
             showAddWorkspaceSheet = true
         }
         .sheet(isPresented: $showAddWorkspaceSheet) {
-            CreateWorkspaceSheet()
+            if let repo = selectedRepo {
+                CreateWorkspaceSheet(repo: repo, worktreeManager: worktreeManager)
+            } else {
+                VStack(spacing: 16) {
+                    Image(systemName: "folder.badge.plus")
+                        .font(.system(size: 48))
+                        .foregroundStyle(.secondary)
+                    Text("Add a repository first")
+                        .font(.title3)
+                    Button("Close") { showAddWorkspaceSheet = false }
+                        .buttonStyle(.borderedProminent)
+                }
+                .padding(40)
+                .frame(width: 400, height: 250)
+            }
         }
     }
 
     // MARK: - Helpers
+
+    private var selectedRepo: Repository? {
+        guard let id = selectedWorkspaceID else { return repoManager.repos.first }
+        if id.hasPrefix("repo-") {
+            let uuidString = String(id.dropFirst("repo-".count))
+            return repoManager.repos.first { $0.id.uuidString == uuidString }
+        }
+        if let wt = selectedWorktree {
+            return repoManager.repos.first { $0.id == wt.repoId }
+        }
+        return repoManager.repos.first
+    }
 
     private var selectedWorktree: Worktree? {
         guard let id = selectedWorkspaceID,
