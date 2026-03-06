@@ -47,6 +47,7 @@ struct SidebarView: View {
                     }
                     .buttonStyle(.plain)
                     .help("Add Repository")
+                    .accessibilityLabel("Add repository")
                 }
             }
 
@@ -103,6 +104,7 @@ struct SidebarView: View {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                 }
                 .help("Filter Workspaces")
+                .accessibilityLabel("Filter workspaces")
             }
 
             ToolbarItem(placement: .primaryAction) {
@@ -128,6 +130,7 @@ struct SidebarView: View {
                     Image(systemName: "plus")
                 }
                 .help("Add Repository or New Workspace")
+                .accessibilityLabel("Create workspace or add repository")
             }
         }
         .onChange(of: showArchived) { _, newValue in

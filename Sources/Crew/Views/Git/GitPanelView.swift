@@ -297,6 +297,13 @@ struct GitPanelView: View {
         .task {
             await vm.refresh()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .crewRefreshWorkspace)) { _ in
+            Task { await vm.refresh() }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .crewCommitAndPush)) { _ in
+            guard !vm.changes.isEmpty else { return }
+            vm.showCommitSheet = true
+        }
     }
 
     // MARK: - Toolbar
@@ -330,6 +337,7 @@ struct GitPanelView: View {
             .buttonStyle(.plain)
             .disabled(vm.changes.isEmpty)
             .help("Generate review summary and copy to clipboard")
+            .accessibilityLabel("Copy review summary")
 
             Button {
                 Task { await vm.refresh() }
@@ -344,7 +352,9 @@ struct GitPanelView: View {
                     )
             }
             .buttonStyle(.plain)
+            .keyboardShortcut("r", modifiers: .command)
             .help("Refresh git status")
+            .accessibilityLabel("Refresh git status")
 
             Button {
                 vm.showCommitSheet = true
@@ -352,8 +362,10 @@ struct GitPanelView: View {
                 Image(systemName: "checkmark.circle")
             }
             .buttonStyle(.plain)
+            .keyboardShortcut("y", modifiers: [.command, .shift])
             .disabled(vm.changes.isEmpty)
             .help("Open commit sheet")
+            .accessibilityLabel("Open commit and push sheet")
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)

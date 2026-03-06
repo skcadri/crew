@@ -56,6 +56,18 @@ struct CrewCommands: Commands {
                 NotificationCenter.default.post(name: .crewCommitAndPush, object: nil)
             }
             .keyboardShortcut("y", modifiers: [.command, .shift])
+
+            Button("Refresh Workspace") {
+                NotificationCenter.default.post(name: .crewRefreshWorkspace, object: nil)
+            }
+            .keyboardShortcut("r", modifiers: .command)
+        }
+
+        CommandGroup(after: .help) {
+            Button("Keyboard Shortcuts") {
+                NotificationCenter.default.post(name: .crewShowShortcutCheatSheet, object: nil)
+            }
+            .keyboardShortcut("/", modifiers: .command)
         }
     }
 }
@@ -69,4 +81,6 @@ extension Notification.Name {
     static let crewSwitchWorkspaceTab     = Notification.Name("crew.switchWorkspaceTab")
     static let crewCommitAndPush          = Notification.Name("crew.commitAndPush")
     static let crewOpenCommandPalette     = Notification.Name("crew.openCommandPalette")
+    static let crewRefreshWorkspace       = Notification.Name("crew.refreshWorkspace")
+    static let crewShowShortcutCheatSheet = Notification.Name("crew.showShortcutCheatSheet")
 }
