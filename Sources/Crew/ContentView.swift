@@ -1,9 +1,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.openSettings) private var openSettings
+
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var selectedWorkspaceID: String? = nil
     @State private var showAddWorkspaceSheet: Bool = false
+    @State private var showCommandPalette: Bool = false
 
     @ObservedObject private var worktreeManager = WorktreeManager.shared
     @ObservedObject private var repoManager = RepoManager.shared
@@ -49,6 +52,9 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: .crewNewWorkspace)) { _ in
             showAddWorkspaceSheet = true
         }
+        .onReceive(NotificationCenter.default.publisher(for: .crewOpenCommandPalette)) { _ in
+            showCommandPalette = true
+        }
         .sheet(isPresented: $showAddWorkspaceSheet) {
             if let repo = selectedRepo {
                 CreateWorkspaceSheet(repo: repo, worktreeManager: worktreeManager)
@@ -65,6 +71,13 @@ struct ContentView: View {
                 .padding(40)
                 .frame(width: 400, height: 250)
             }
+        }
+        .sheet(isPresented: $showCommandPalette) {
+            CommandPaletteView(
+                isPresented: $showCommandPalette,
+                selectedWorkspaceID: $selectedWorkspaceID,
+                openSettings: { openSettings() }
+            )
         }
     }
 
