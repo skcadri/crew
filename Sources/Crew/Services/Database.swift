@@ -63,6 +63,16 @@ final class Database {
     private let msgContent    = Expression<String>("content")
     private let msgTimestamp  = Expression<Int64>("timestamp")
 
+    // ---- chat_summaries ----
+    private let chatSummaries          = Table("chat_summaries")
+    private let summaryId              = Expression<String>("id")
+    private let summaryWorktreeId      = Expression<String>("worktree_id")
+    private let summaryText            = Expression<String>("summary")
+    private let summaryTOCJSON         = Expression<String>("toc_json")
+    private let summaryMessageCount    = Expression<Int64>("message_count")
+    private let summaryCharacterCount  = Expression<Int64>("character_count")
+    private let summaryUpdatedAt       = Expression<Int64>("updated_at")
+
     // ---- check_todos ----
     private let checkTodos         = Table("check_todos")
     private let todoId             = Expression<String>("id")
@@ -110,6 +120,7 @@ final class Database {
         do {
             db = try Connection(dbPath)
             try applyMigrations()
+            try ensureRequiredTables()
         } catch {
             fatalError("Failed to open/initialise Crew database at \(dbPath): \(error)")
         }
@@ -142,6 +153,10 @@ final class Database {
 
     // MARK: Schema Creation
 
+    private func ensureRequiredTables() throws {
+        try createChatSummaryTables(on: db)
+    }
+
     private func applyMigrations() throws {
         try SQLiteMigrationRunner.apply([
             SQLiteMigration(version: 1, label: "Core schema") { [self] db in
@@ -149,6 +164,9 @@ final class Database {
             },
             SQLiteMigration(version: 2, label: "Phase A integration state") { [self] db in
                 try self.createPhaseAIntegrationTables(on: db)
+            },
+            SQLiteMigration(version: 3, label: "Chat summaries") { [self] db in
+                try self.createChatSummaryTables(on: db)
             }
         ], on: db)
     }
@@ -175,6 +193,16 @@ final class Database {
             t.foreignKey(wtRepoId, references: repos, repoId, delete: .cascade)
         })
 
+        // messages
+        try db.run(messages.create(ifNotExists: true) { t in
+            t.column(msgId, primaryKey: true)
+            t.column(msgWorktreeId)
+            t.column(msgRole)
+            t.column(msgContent)
+            t.column(msgTimestamp)
+            t.foreignKey(msgWorktreeId, references: worktrees, wtId, delete: .cascade)
+        })
+
         // check_todos
         try db.run(checkTodos.create(ifNotExists: true) { t in
             t.column(todoId,         primaryKey: true)
@@ -194,6 +222,7 @@ final class Database {
             t.primaryKey(rfsWorkspaceId, rfsFilePath)
         })
 
+        try createChatSummaryTables(on: db)
         try runLegacyStatusMigration()
     }
 
@@ -213,6 +242,20 @@ final class Database {
 
         let validStatuses = WorktreeStatus.allCases.map { "'\($0.rawValue)'" }.joined(separator: ",")
         try db.run("UPDATE worktrees SET status = ? WHERE status NOT IN (\(validStatuses))", WorktreeStatus.backlog.rawValue)
+    }
+
+    private func createChatSummaryTables(on db: Connection) throws {
+        try db.run(chatSummaries.create(ifNotExists: true) { t in
+            t.column(summaryId, primaryKey: true)
+            t.column(summaryWorktreeId)
+            t.column(summaryText)
+            t.column(summaryTOCJSON)
+            t.column(summaryMessageCount)
+            t.column(summaryCharacterCount)
+            t.column(summaryUpdatedAt)
+            t.foreignKey(summaryWorktreeId, references: worktrees, wtId, delete: .cascade)
+            t.unique(summaryWorktreeId)
+        })
     }
 
     /// Shared persistence envelopes for A2/A3/A4/A5 integration.
@@ -506,6 +549,62 @@ extension Database {
             role:        MessageRole(rawValue: row[msgRole]) ?? .user,
             content:     row[msgContent],
             timestamp:   Date(timeIntervalSince1970: Double(row[msgTimestamp]))
+        )
+    }
+}
+
+// MARK: - Chat Summary CRUD
+
+extension Database {
+
+    func upsertChatSummary(_ summary: ChatSummarySnapshot) throws {
+        let encoder = JSONEncoder()
+        let tocData = try encoder.encode(summary.tocEntries)
+        guard let tocJSON = String(data: tocData, encoding: .utf8) else {
+            throw DatabaseError.insertFailed("Failed to encode TOC JSON")
+        }
+
+        let now = Int64(summary.updatedAt.timeIntervalSince1970)
+        let existing = chatSummaries.filter(summaryWorktreeId == summary.worktreeId.uuidString)
+
+        if try db.pluck(existing) != nil {
+            try db.run(existing.update(
+                summaryId <- summary.id.uuidString,
+                summaryText <- summary.summary,
+                summaryTOCJSON <- tocJSON,
+                summaryMessageCount <- Int64(summary.messageCount),
+                summaryCharacterCount <- Int64(summary.characterCount),
+                summaryUpdatedAt <- now
+            ))
+        } else {
+            try db.run(chatSummaries.insert(
+                summaryId <- summary.id.uuidString,
+                summaryWorktreeId <- summary.worktreeId.uuidString,
+                summaryText <- summary.summary,
+                summaryTOCJSON <- tocJSON,
+                summaryMessageCount <- Int64(summary.messageCount),
+                summaryCharacterCount <- Int64(summary.characterCount),
+                summaryUpdatedAt <- now
+            ))
+        }
+    }
+
+    func fetchChatSummary(forWorktree worktreeId: UUID) throws -> ChatSummarySnapshot? {
+        let query = chatSummaries.filter(summaryWorktreeId == worktreeId.uuidString)
+        guard let row = try db.pluck(query) else { return nil }
+
+        let decoder = JSONDecoder()
+        let tocData = Data(row[summaryTOCJSON].utf8)
+        let tocEntries = (try? decoder.decode([ChatTOCEntry].self, from: tocData)) ?? []
+
+        return ChatSummarySnapshot(
+            id: UUID(uuidString: row[summaryId]) ?? UUID(),
+            worktreeId: UUID(uuidString: row[summaryWorktreeId])!,
+            summary: row[summaryText],
+            tocEntries: tocEntries,
+            messageCount: Int(row[summaryMessageCount]),
+            characterCount: Int(row[summaryCharacterCount]),
+            updatedAt: Date(timeIntervalSince1970: Double(row[summaryUpdatedAt]))
         )
     }
 }

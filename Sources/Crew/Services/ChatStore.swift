@@ -13,6 +13,16 @@ final class ChatStore: ObservableObject {
     /// True while an agent response is being streamed.
     @Published var isLoading: Bool = false
 
+    /// Latest persisted summary snapshot for the active chat.
+    @Published private(set) var summarySnapshot: ChatSummarySnapshot?
+
+    var tocEntries: [ChatTOCEntry] {
+        if let persisted = summarySnapshot?.tocEntries, !persisted.isEmpty {
+            return persisted
+        }
+        return ChatSummaryService.shared.extractTOCEntries(from: messages)
+    }
+
     // MARK: - Current worktree
 
     private(set) var currentWorktreeId: UUID?
@@ -28,9 +38,12 @@ final class ChatStore: ObservableObject {
         currentWorktreeId = worktreeId
         do {
             messages = try Database.shared.fetchMessages(forWorktree: worktreeId)
+            summarySnapshot = try Database.shared.fetchChatSummary(forWorktree: worktreeId)
+            refreshSummaryIfNeeded(force: false)
         } catch {
             print("[ChatStore] loadMessages error: \(error)")
             messages = []
+            summarySnapshot = nil
         }
     }
 
@@ -56,6 +69,7 @@ final class ChatStore: ObservableObject {
             print("[ChatStore] addMessage persist error: \(error)")
         }
         messages.append(message)
+        refreshSummaryIfNeeded(force: false)
         return message
     }
 
@@ -73,6 +87,7 @@ final class ChatStore: ObservableObject {
         guard let msg = messages.last(where: { $0.role == .assistant }) else { return }
         do {
             try Database.shared.updateMessage(msg)
+            refreshSummaryIfNeeded(force: true)
         } catch {
             print("[ChatStore] finaliseStreaming persist error: \(error)")
         }
@@ -81,6 +96,31 @@ final class ChatStore: ObservableObject {
     /// Clears all messages for the current worktree from memory only (not DB).
     func clearMemory() {
         messages = []
+        summarySnapshot = nil
         currentWorktreeId = nil
+    }
+
+    private func refreshSummaryIfNeeded(force: Bool) {
+        guard let worktreeId = currentWorktreeId else { return }
+
+        let shouldCreate = force || ChatSummaryService.shared.shouldCreateSnapshot(
+            messages: messages,
+            previous: summarySnapshot
+        )
+
+        guard shouldCreate else { return }
+
+        let snapshot = ChatSummaryService.shared.makeSnapshot(
+            worktreeId: worktreeId,
+            messages: messages,
+            previous: summarySnapshot
+        )
+
+        do {
+            try Database.shared.upsertChatSummary(snapshot)
+            summarySnapshot = snapshot
+        } catch {
+            print("[ChatStore] summary persist error: \(error)")
+        }
     }
 }

@@ -53,7 +53,7 @@ final class DatabaseTests: XCTestCase {
         let fetched = try db.fetchWorktree(id: wt.id)
         XCTAssertNotNil(fetched)
         XCTAssertEqual(fetched?.branch, "feature/test")
-        XCTAssertEqual(fetched?.status, .idle)
+        XCTAssertEqual(fetched?.status, .backlog)
     }
 
     func testUpdateWorktreeStatus() throws {
@@ -64,9 +64,9 @@ final class DatabaseTests: XCTestCase {
         let wt = Worktree(repoId: repo.id, branch: "main", path: "/tmp/status-wt")
         try db.insertWorktree(wt)
 
-        try db.updateWorktreeStatus(id: wt.id, status: .running)
+        try db.updateWorktreeStatus(id: wt.id, status: .inProgress)
         let fetched = try db.fetchWorktree(id: wt.id)
-        XCTAssertEqual(fetched?.status, .running)
+        XCTAssertEqual(fetched?.status, .inProgress)
     }
 
     // MARK: - ChatMessage Tests
@@ -104,6 +104,31 @@ final class DatabaseTests: XCTestCase {
         try db.deleteMessages(forWorktree: wt.id)
         let remaining = try db.fetchMessages(forWorktree: wt.id)
         XCTAssertEqual(remaining.count, 0)
+    }
+
+    func testPersistAndFetchChatSummary() throws {
+        let repo = Repository(name: "summary-repo", url: "https://github.com/example/summary", localPath: "/tmp/summary-repo")
+        try db.insertRepository(repo)
+        defer { try? db.deleteRepository(id: repo.id) }
+
+        let wt = Worktree(repoId: repo.id, branch: "summary-branch", path: "/tmp/summary-wt")
+        try db.insertWorktree(wt)
+
+        let snapshot = ChatSummarySnapshot(
+            worktreeId: wt.id,
+            summary: "Long chat summary",
+            tocEntries: [ChatTOCEntry(title: "Overview", level: 1, messageId: UUID())],
+            messageCount: 20,
+            characterCount: 6000
+        )
+
+        try db.upsertChatSummary(snapshot)
+        let fetched = try db.fetchChatSummary(forWorktree: wt.id)
+
+        XCTAssertNotNil(fetched)
+        XCTAssertEqual(fetched?.summary, "Long chat summary")
+        XCTAssertEqual(fetched?.tocEntries.first?.title, "Overview")
+        XCTAssertEqual(fetched?.messageCount, 20)
     }
 
     // MARK: - Review File State Tests
