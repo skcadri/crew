@@ -65,6 +65,8 @@ struct ChatInputView: View {
                         .stroke(Color(nsColor: .separatorColor), lineWidth: 0.5)
                 )
                 .disabled(isProcessing || isInputLocked)
+                .accessibilityLabel("Message input")
+                .accessibilityHint("Press Return to send, Shift Return for a new line")
 
                 // Send button
                 Button(action: handleSend) {
@@ -76,6 +78,7 @@ struct ChatInputView: View {
                 .disabled(!canSend && !isProcessing)
                 .keyboardShortcut(.return, modifiers: [])
                 .help(isProcessing ? "Stop" : (pendingQuestionPrompt == nil ? "Send (Return)" : "Submit answer (Return)"))
+                .accessibilityLabel(isProcessing ? "Stop response" : "Send message")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)

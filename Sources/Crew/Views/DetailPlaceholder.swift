@@ -40,6 +40,7 @@ struct DetailPlaceholder: View {
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .padding(.top, 8)
+                    .accessibilityLabel("Create new workspace")
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }

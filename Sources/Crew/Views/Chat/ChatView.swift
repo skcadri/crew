@@ -87,6 +87,8 @@ struct ChatView: View {
                 .font(.caption)
             }
             .buttonStyle(.bordered)
+            .keyboardShortcut("a", modifiers: [.command, .shift])
+            .accessibilityLabel("Attach context files")
             .popover(isPresented: $showContextPicker) {
                 ContextPickerView(
                     workspacePath: workspacePath,
@@ -169,11 +171,17 @@ private struct PlanApprovalCard: View {
             HStack(spacing: 8) {
                 Button("Approve") { store.approvePlan(); feedback = "" }
                     .buttonStyle(.borderedProminent)
+                    .keyboardShortcut(.return, modifiers: [.command])
+                    .accessibilityLabel("Approve plan")
                 Button("Approve with Feedback") { store.approvePlan(feedback: feedback); feedback = "" }
                     .buttonStyle(.bordered)
+                    .keyboardShortcut(.return, modifiers: [.command, .shift])
+                    .accessibilityLabel("Approve plan with feedback")
                     .disabled(feedback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 Button("Reject") { store.rejectPlan(reason: feedback); feedback = "" }
                     .buttonStyle(.bordered)
+                    .keyboardShortcut(".", modifiers: .command)
+                    .accessibilityLabel("Reject plan")
                     .tint(.red)
             }
         }

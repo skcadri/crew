@@ -4,6 +4,7 @@ struct ContentView: View {
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var selectedWorkspaceID: String? = nil
     @State private var showAddWorkspaceSheet: Bool = false
+    @State private var showShortcutCheatSheet: Bool = false
 
     @ObservedObject private var worktreeManager = WorktreeManager.shared
     @ObservedObject private var repoManager = RepoManager.shared
@@ -49,6 +50,19 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: .crewNewWorkspace)) { _ in
             showAddWorkspaceSheet = true
         }
+        .onReceive(NotificationCenter.default.publisher(for: .crewNewWorkspaceFromBranch)) { _ in
+            showAddWorkspaceSheet = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .crewCloseTab)) { _ in
+            selectedWorkspaceID = nil
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .crewSwitchWorkspaceTab)) { notification in
+            guard let index = notification.userInfo?["index"] as? Int else { return }
+            switchToWorkspace(at: index)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .crewShowShortcutCheatSheet)) { _ in
+            showShortcutCheatSheet = true
+        }
         .sheet(isPresented: $showAddWorkspaceSheet) {
             if let repo = selectedRepo {
                 CreateWorkspaceSheet(repo: repo, worktreeManager: worktreeManager)
@@ -61,10 +75,14 @@ struct ContentView: View {
                         .font(.title3)
                     Button("Close") { showAddWorkspaceSheet = false }
                         .buttonStyle(.borderedProminent)
+                        .accessibilityLabel("Close add workspace panel")
                 }
                 .padding(40)
                 .frame(width: 400, height: 250)
             }
+        }
+        .sheet(isPresented: $showShortcutCheatSheet) {
+            ShortcutCheatSheetView()
         }
     }
 
@@ -95,6 +113,17 @@ struct ContentView: View {
         let store = ChatStore()
         chatStores[key] = store
         return store
+    }
+
+    private func switchToWorkspace(at oneBasedIndex: Int) {
+        guard oneBasedIndex > 0 else { return }
+
+        let orderedWorkspaceIDs = worktreeManager.worktrees
+            .sorted { $0.createdAt < $1.createdAt }
+            .map { "worktree-\($0.id.uuidString)" }
+
+        guard oneBasedIndex <= orderedWorkspaceIDs.count else { return }
+        selectedWorkspaceID = orderedWorkspaceIDs[oneBasedIndex - 1]
     }
 }
 
