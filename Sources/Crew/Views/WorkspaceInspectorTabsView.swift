@@ -28,11 +28,7 @@ struct WorkspaceInspectorTabsView: View {
             Group {
                 switch selectedTab {
                 case .git:
-                    GitPanelView(
-                        workspaceKey: worktreeId.uuidString,
-                        repoPath: repoPath,
-                        router: ChecksPanelRouter.shared
-                    )
+                    GitPanelView(repoPath: repoPath, workspaceId: worktreeId.uuidString)
                 case .checks:
                     ChecksPanelView(repoPath: repoPath, worktreeId: worktreeId)
                 }

@@ -106,6 +106,27 @@ final class DatabaseTests: XCTestCase {
         XCTAssertEqual(remaining.count, 0)
     }
 
+    // MARK: - Review File State Tests
+
+    func testPersistViewedFileStatePerWorkspace() throws {
+        let workspaceA = "ws-a"
+        let workspaceB = "ws-b"
+        let path = "Sources/Crew/File.swift"
+
+        try db.setFileViewed(workspaceId: workspaceA, filePath: path, viewed: true)
+        try db.setFileViewed(workspaceId: workspaceB, filePath: path, viewed: false)
+        defer {
+            try? db.setFileViewed(workspaceId: workspaceA, filePath: path, viewed: false)
+            try? db.setFileViewed(workspaceId: workspaceB, filePath: path, viewed: false)
+        }
+
+        let aViewed = try db.fetchViewedFiles(workspaceId: workspaceA)
+        let bViewed = try db.fetchViewedFiles(workspaceId: workspaceB)
+
+        XCTAssertTrue(aViewed.contains(path))
+        XCTAssertFalse(bViewed.contains(path))
+    }
+
     // MARK: - AgentType Tests
 
     func testAgentTypeDisplayNames() {

@@ -1,16 +1,10 @@
 import SwiftUI
+import AppKit
 
 // MARK: - GitPanelViewModel
 
 @MainActor
 final class GitPanelViewModel: ObservableObject {
-    enum InspectorTab: String, CaseIterable, Identifiable {
-        case diff = "Diff"
-        case comments = "Comments"
-
-        var id: String { rawValue }
-    }
-
     @Published var changes: [FileChange] = []
     @Published var selectedFile: FileChange? = nil
     @Published var diffText: String = ""
@@ -19,32 +13,29 @@ final class GitPanelViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     @Published var showCommitSheet: Bool = false
     @Published var checkedFiles: Set<String> = []
-
-    @Published var selectedInspectorTab: InspectorTab = .diff
-    @Published var isLoadingComments: Bool = false
-    @Published var prCommentError: String? = nil
-    @Published var prComments: [PRReviewComment] = []
-    @Published var currentPRNumber: Int? = nil
-    @Published var locallyAddressedCommentIDs: Set<String> = []
+    @Published var viewedFiles: Set<String> = []
+    @Published var reviewNotesByFile: [String: String] = [:]
+    @Published var reviewSummary: String = ""
 
     // Toast
     @Published var toastMessage: String? = nil
     private var toastTask: Task<Void, Never>? = nil
 
     let repoPath: String
+    let workspaceId: String
 
-    var groupedPRComments: [PRCommentFileGroup] {
-        Dictionary(grouping: prComments, by: \.path)
-            .map { path, comments in
-                PRCommentFileGroup(path: path, comments: comments.sorted { lhs, rhs in
-                    (lhs.line ?? Int.max, lhs.id) < (rhs.line ?? Int.max, rhs.id)
-                })
-            }
-            .sorted { $0.path < $1.path }
+    var viewedCount: Int {
+        changes.filter { viewedFiles.contains($0.path) }.count
     }
 
-    init(repoPath: String) {
+    var isReadyForReview: Bool {
+        !changes.isEmpty && viewedCount == changes.count
+    }
+
+    init(repoPath: String, workspaceId: String) {
         self.repoPath = repoPath
+        self.workspaceId = workspaceId
+        self.viewedFiles = (try? Database.shared.fetchViewedFiles(workspaceId: workspaceId)) ?? []
     }
 
     // MARK: Refresh
@@ -59,6 +50,10 @@ final class GitPanelViewModel: ObservableObject {
             changes = newChanges
             checkedFiles = Set(newChanges.map(\.path))
 
+            let paths = Set(newChanges.map(\.path))
+            viewedFiles = viewedFiles.intersection(paths)
+            try? Database.shared.clearViewedFiles(workspaceId: workspaceId, keeping: paths)
+
             // Re-load diff for selected file if it's still present
             if let sel = selectedFile, newChanges.contains(sel) {
                 await loadDiff(for: sel)
@@ -72,35 +67,6 @@ final class GitPanelViewModel: ObservableObject {
         } catch {
             errorMessage = error.localizedDescription
         }
-
-        await refreshPRComments()
-    }
-
-    func refreshPRComments() async {
-        isLoadingComments = true
-        prCommentError = nil
-        defer { isLoadingComments = false }
-
-        do {
-            let snapshot = try await GitHubPRCommentSyncService.fetchCurrentPRComments(repoPath: repoPath)
-            prComments = snapshot.comments
-            currentPRNumber = snapshot.pullRequestNumber
-
-            let knownIDs = Set(snapshot.comments.map(\.id))
-            locallyAddressedCommentIDs = locallyAddressedCommentIDs.intersection(knownIDs)
-        } catch {
-            currentPRNumber = nil
-            prComments = []
-            prCommentError = error.localizedDescription
-        }
-    }
-
-    func toggleLocallyAddressed(_ comment: PRReviewComment) {
-        if locallyAddressedCommentIDs.contains(comment.id) {
-            locallyAddressedCommentIDs.remove(comment.id)
-        } else {
-            locallyAddressedCommentIDs.insert(comment.id)
-        }
     }
 
     // MARK: Select File
@@ -108,6 +74,69 @@ final class GitPanelViewModel: ObservableObject {
     func select(_ change: FileChange) {
         selectedFile = change
         Task { await loadDiff(for: change) }
+    }
+
+    // MARK: Viewed State
+
+    func setViewed(_ viewed: Bool, for filePath: String) {
+        if viewed { viewedFiles.insert(filePath) }
+        else { viewedFiles.remove(filePath) }
+
+        do {
+            try Database.shared.setFileViewed(workspaceId: workspaceId, filePath: filePath, viewed: viewed)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func toggleViewed(for filePath: String) {
+        setViewed(!viewedFiles.contains(filePath), for: filePath)
+    }
+
+    // MARK: Summary
+
+    func generateReviewSummary() {
+        guard !changes.isEmpty else {
+            reviewSummary = "No changed files to review."
+            return
+        }
+
+        let counts = Dictionary(grouping: changes, by: { $0.status }).mapValues(\.count)
+        let unviewed = changes.map(\.path).filter { !viewedFiles.contains($0) }
+        let viewed = changes.map(\.path).filter { viewedFiles.contains($0) }
+
+        var lines: [String] = []
+        lines.append("Review Summary")
+        lines.append("Files: \(changes.count) total • \(viewed.count) viewed • \(unviewed.count) pending")
+        lines.append("Gate: \(isReadyForReview ? "READY" : "NOT READY")")
+        lines.append("")
+        lines.append("Change breakdown:")
+        lines.append("- Modified: \(counts[.modified, default: 0])")
+        lines.append("- Added: \(counts[.added, default: 0])")
+        lines.append("- Deleted: \(counts[.deleted, default: 0])")
+        lines.append("- Renamed: \(counts[.renamed, default: 0])")
+        lines.append("- Copied: \(counts[.copied, default: 0])")
+        lines.append("- Untracked: \(counts[.untracked, default: 0])")
+
+        if !unviewed.isEmpty {
+            lines.append("")
+            lines.append("Pending files:")
+            lines += unviewed.map { "- \($0)" }
+        }
+
+        let comments = reviewNotesByFile
+            .filter { !$0.value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .sorted { $0.key < $1.key }
+
+        if !comments.isEmpty {
+            lines.append("")
+            lines.append("Reviewer notes:")
+            for (path, note) in comments {
+                lines.append("- \(path): \(note.replacingOccurrences(of: "\n", with: " "))")
+            }
+        }
+
+        reviewSummary = lines.joined(separator: "\n")
     }
 
     // MARK: Load Diff
@@ -141,22 +170,12 @@ final class GitPanelViewModel: ObservableObject {
 
 /// Inspector panel showing changed files and a unified diff viewer.
 /// Sits in the right inspector column of the main window.
-@MainActor
 struct GitPanelView: View {
 
     @StateObject private var vm: GitPanelViewModel
-    @ObservedObject private var router: ChecksPanelRouter
 
-    private let workspaceKey: String
-
-    init(
-        workspaceKey: String,
-        repoPath: String,
-        router: ChecksPanelRouter
-    ) {
-        self.workspaceKey = workspaceKey
-        self.router = router
-        _vm = StateObject(wrappedValue: GitPanelViewModel(repoPath: repoPath))
+    init(repoPath: String, workspaceId: String) {
+        _vm = StateObject(wrappedValue: GitPanelViewModel(repoPath: repoPath, workspaceId: workspaceId))
     }
 
     var body: some View {
@@ -168,9 +187,7 @@ struct GitPanelView: View {
                 errorBanner(err)
             }
 
-            if selectedTab == .checks {
-                checksPlaceholder
-            } else if vm.changes.isEmpty && !vm.isLoadingStatus {
+            if vm.changes.isEmpty && !vm.isLoadingStatus {
                 emptyState
             } else {
                 contentSplit
@@ -195,17 +212,6 @@ struct GitPanelView: View {
         }
     }
 
-    private var selectedTab: InspectorPanelTab {
-        router.selectedTab(for: workspaceKey)
-    }
-
-    private var tabBinding: Binding<InspectorPanelTab> {
-        Binding(
-            get: { router.selectedTab(for: workspaceKey) },
-            set: { router.setSelectedTab($0, for: workspaceKey) }
-        )
-    }
-
     // MARK: - Toolbar
 
     private var toolbar: some View {
@@ -213,24 +219,9 @@ struct GitPanelView: View {
             Label("Git", systemImage: "arrow.triangle.branch")
                 .font(.subheadline.weight(.semibold))
 
-            Picker("Inspector tab", selection: tabBinding) {
-                ForEach(InspectorPanelTab.allCases) { tab in
-                    Label(tab.title, systemImage: tab.systemImage).tag(tab)
-                }
-            }
-            .pickerStyle(.segmented)
-            .frame(maxWidth: 240)
-
             Spacer()
 
-            if let pr = vm.currentPRNumber {
-                Text("PR #\(pr)")
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.blue)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.blue.opacity(0.12), in: Capsule())
-            }
+            gateBadge
 
             if !vm.changes.isEmpty {
                 Text("\(vm.changes.count)")
@@ -241,7 +232,18 @@ struct GitPanelView: View {
                     .background(Color.orange, in: Capsule())
             }
 
-            // Refresh
+            Button {
+                vm.generateReviewSummary()
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(vm.reviewSummary, forType: .string)
+                vm.showToast("Review summary copied")
+            } label: {
+                Image(systemName: "text.alignleft")
+            }
+            .buttonStyle(.plain)
+            .disabled(vm.changes.isEmpty)
+            .help("Generate review summary and copy to clipboard")
+
             Button {
                 Task { await vm.refresh() }
             } label: {
@@ -255,21 +257,29 @@ struct GitPanelView: View {
                     )
             }
             .buttonStyle(.plain)
-            .help(selectedTab == .checks ? "Refresh checks panel" : "Refresh git status and PR comments")
+            .help("Refresh git status")
 
-            if selectedTab == .changes {
-                Button {
-                    vm.showCommitSheet = true
-                } label: {
-                    Image(systemName: "checkmark.circle")
-                }
-                .buttonStyle(.plain)
-                .disabled(vm.changes.isEmpty)
-                .help("Open commit sheet")
+            Button {
+                vm.showCommitSheet = true
+            } label: {
+                Image(systemName: "checkmark.circle")
             }
+            .buttonStyle(.plain)
+            .disabled(vm.changes.isEmpty)
+            .help("Open commit sheet")
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
+    }
+
+    private var gateBadge: some View {
+        HStack(spacing: 4) {
+            Image(systemName: vm.isReadyForReview ? "checkmark.seal.fill" : "hourglass")
+            Text("\(vm.viewedCount)/\(vm.changes.count) viewed")
+                .font(.caption2.weight(.medium))
+        }
+        .foregroundStyle(vm.isReadyForReview ? Color.green : .secondary)
+        .help(vm.isReadyForReview ? "Ready for review" : "Review pending")
     }
 
     // MARK: - Empty state
@@ -288,31 +298,14 @@ struct GitPanelView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private var checksPlaceholder: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "checklist")
-                .font(.system(size: 26))
-                .foregroundStyle(.secondary)
-            Text("Checks panel integration ready")
-                .font(.callout.weight(.medium))
-            Text("Use the Checks tab for TODOs and readiness. This inspector tab is reserved for provider-backed checks.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: 300)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-    // MARK: - Content split (file list + inspector)
-
+    // MARK: - Content split (file list + diff)
 
     private var contentSplit: some View {
         VSplitView {
             fileList
                 .frame(minHeight: 80, maxHeight: 220)
 
-            inspectorPanel
+            diffPanel
                 .frame(minHeight: 120, maxHeight: .infinity)
         }
     }
@@ -332,7 +325,11 @@ struct GitPanelView: View {
                                 else  { vm.checkedFiles.remove(change.path) }
                             }
                         ),
-                        isSelected: vm.selectedFile?.id == change.id
+                        isViewed: vm.viewedFiles.contains(change.path),
+                        isSelected: vm.selectedFile?.id == change.id,
+                        onToggleViewed: {
+                            vm.toggleViewed(for: change.path)
+                        }
                     )
                     .contentShape(Rectangle())
                     .onTapGesture {
@@ -342,38 +339,6 @@ struct GitPanelView: View {
             }
             .padding(.horizontal, 6)
             .padding(.vertical, 4)
-        }
-    }
-
-    // MARK: - Inspector panel
-
-    private var inspectorPanel: some View {
-        VStack(spacing: 0) {
-            Picker("View", selection: $vm.selectedInspectorTab) {
-                ForEach(GitPanelViewModel.InspectorTab.allCases) { tab in
-                    Text(tab.rawValue).tag(tab)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding(8)
-
-            Divider()
-
-            switch vm.selectedInspectorTab {
-            case .diff:
-                diffPanel
-            case .comments:
-                PRCommentsListView(
-                    groups: vm.groupedPRComments,
-                    locallyAddressed: vm.locallyAddressedCommentIDs,
-                    isLoading: vm.isLoadingComments,
-                    errorMessage: vm.prCommentError,
-                    onRefresh: {
-                        Task { await vm.refreshPRComments() }
-                    },
-                    onToggleAddressed: { vm.toggleLocallyAddressed($0) }
-                )
-            }
         }
     }
 
@@ -388,7 +353,7 @@ struct GitPanelView: View {
             } else {
                 VStack(spacing: 0) {
                     if let file = vm.selectedFile {
-                        HStack(spacing: 4) {
+                        HStack(spacing: 6) {
                             Image(systemName: "doc.text")
                                 .foregroundStyle(.secondary)
                                 .font(.caption)
@@ -398,10 +363,29 @@ struct GitPanelView: View {
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                             Spacer()
+
+                            Button(vm.viewedFiles.contains(file.path) ? "Viewed" : "Mark viewed") {
+                                vm.toggleViewed(for: file.path)
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.mini)
                         }
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Color(nsColor: .windowBackgroundColor))
+
+                        Divider()
+
+                        TextField(
+                            "Add review note for this file (optional)",
+                            text: Binding(
+                                get: { vm.reviewNotesByFile[file.path, default: ""] },
+                                set: { vm.reviewNotesByFile[file.path] = $0 }
+                            )
+                        )
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
 
                         Divider()
                     }
@@ -452,11 +436,7 @@ struct GitPanelView: View {
 
 #if DEBUG
 #Preview("Git Panel — with changes") {
-    GitPanelView(
-        workspaceKey: "preview-workspace",
-        repoPath: "/tmp/fake",
-        router: .shared
-    )
-    .frame(width: 320, height: 600)
+    GitPanelView(repoPath: "/tmp/fake", workspaceId: "preview-workspace")
+        .frame(width: 320, height: 600)
 }
 #endif
