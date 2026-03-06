@@ -125,10 +125,16 @@ final class Database {
     private let contextRefUpdatedAt         = Expression<Int64>("updated_at")
 
     // ---- phase_b_workspace_state ----
-    private let phaseBWorkspaceState          = Table("phase_b_workspace_state")
+    private let phaseBWorkspaceState            = Table("phase_b_workspace_state")
     private let phaseBWorkspaceStateWorkspaceId = Expression<String>("workspace_id")
-    private let phaseBWorkspaceStatePayload   = Expression<String>("payload_json")
-    private let phaseBWorkspaceStateUpdatedAt = Expression<Int64>("updated_at")
+    private let phaseBWorkspaceStatePayload     = Expression<String>("payload_json")
+    private let phaseBWorkspaceStateUpdatedAt   = Expression<Int64>("updated_at")
+
+    // ---- phase_c_workspace_state ----
+    private let phaseCWorkspaceState            = Table("phase_c_workspace_state")
+    private let phaseCWorkspaceStateWorkspaceId = Expression<String>("workspace_id")
+    private let phaseCWorkspaceStatePayload     = Expression<String>("payload_json")
+    private let phaseCWorkspaceStateUpdatedAt   = Expression<Int64>("updated_at")
 
     // ---- chat_summaries ----
     private let chatSummaries              = Table("chat_summaries")
@@ -197,6 +203,9 @@ final class Database {
             },
             SQLiteMigration(version: 7, label: "Chat summaries") { [self] db in
                 try self.createChatSummaryTable(on: db)
+            },
+            SQLiteMigration(version: 8, label: "Phase C integration state") { [self] db in
+                try self.createPhaseCIntegrationTables(on: db)
             }
         ], on: db)
     }
@@ -338,6 +347,29 @@ final class Database {
         })
     }
 
+    private func createPhaseCIntegrationTables(on db: Connection) throws {
+        try db.run(phaseCWorkspaceState.create(ifNotExists: true) { t in
+            t.column(phaseCWorkspaceStateWorkspaceId, primaryKey: true)
+            t.column(phaseCWorkspaceStatePayload, defaultValue: "{}")
+            t.column(phaseCWorkspaceStateUpdatedAt, defaultValue: 0)
+            t.foreignKey(phaseCWorkspaceStateWorkspaceId, references: worktrees, wtId, delete: .cascade)
+        })
+
+        // Backward-compat for earlier experimental schemas.
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "phase_c_workspace_state",
+            column: "payload_json",
+            definitionSQL: "payload_json TEXT NOT NULL DEFAULT '{}'",
+            on: db
+        )
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "phase_c_workspace_state",
+            column: "updated_at",
+            definitionSQL: "updated_at INTEGER NOT NULL DEFAULT 0",
+            on: db
+        )
+    }
+
     private func createChatSummaryTable(on db: Connection) throws {
         try db.run(chatSummaries.create(ifNotExists: true) { t in
             t.column(chatSummaryWorktreeId, primaryKey: true)
@@ -391,6 +423,64 @@ extension Database {
         guard let result = try db.pluck(row) else { return nil }
         let payload = result[phaseBWorkspaceStatePayload]
         return try JSONDecoder().decode(PhaseBWorkspaceState.self, from: Data(payload.utf8))
+    }
+}
+
+// MARK: - Phase C Workspace State
+
+extension Database {
+
+    func upsertPhaseCWorkspaceState(_ state: PhaseCWorkspaceState) throws {
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "phase_c_workspace_state",
+            column: "payload_json",
+            definitionSQL: "payload_json TEXT NOT NULL DEFAULT '{}'",
+            on: db
+        )
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "phase_c_workspace_state",
+            column: "updated_at",
+            definitionSQL: "updated_at INTEGER NOT NULL DEFAULT 0",
+            on: db
+        )
+
+        let encoder = JSONEncoder()
+        let payload = try String(decoding: encoder.encode(state), as: UTF8.self)
+        let now = Int64(Date().timeIntervalSince1970)
+
+        let row = phaseCWorkspaceState.filter(phaseCWorkspaceStateWorkspaceId == state.workspaceId.uuidString)
+        if try db.pluck(row) != nil {
+            try db.run(row.update(
+                phaseCWorkspaceStatePayload <- payload,
+                phaseCWorkspaceStateUpdatedAt <- now
+            ))
+        } else {
+            try db.run(phaseCWorkspaceState.insert(
+                phaseCWorkspaceStateWorkspaceId <- state.workspaceId.uuidString,
+                phaseCWorkspaceStatePayload <- payload,
+                phaseCWorkspaceStateUpdatedAt <- now
+            ))
+        }
+    }
+
+    func fetchPhaseCWorkspaceState(workspaceId: UUID) throws -> PhaseCWorkspaceState? {
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "phase_c_workspace_state",
+            column: "payload_json",
+            definitionSQL: "payload_json TEXT NOT NULL DEFAULT '{}'",
+            on: db
+        )
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "phase_c_workspace_state",
+            column: "updated_at",
+            definitionSQL: "updated_at INTEGER NOT NULL DEFAULT 0",
+            on: db
+        )
+
+        let row = phaseCWorkspaceState.filter(phaseCWorkspaceStateWorkspaceId == workspaceId.uuidString)
+        guard let result = try db.pluck(row) else { return nil }
+        let payload = result[phaseCWorkspaceStatePayload]
+        return try JSONDecoder().decode(PhaseCWorkspaceState.self, from: Data(payload.utf8))
     }
 }
 
