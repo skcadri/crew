@@ -8,7 +8,8 @@ struct DiffLine: Identifiable {
         case addition, deletion, context, header, fileHeader
     }
 
-    let id = UUID()
+    /// Integer identity is cheaper than UUID for very large diffs.
+    let id: Int
     let number: Int?          // line number (nil for headers)
     let content: String
     let kind: Kind
@@ -18,39 +19,63 @@ struct DiffLine: Identifiable {
 
 enum DiffParser {
     /// Parses raw unified diff text into an array of `DiffLine` values.
-    static func parse(_ raw: String) -> [DiffLine] {
-        var result: [DiffLine] = []
-        var lineNum = 0
-        var addNum  = 0
+    /// Returns parse timing so callers can surface lightweight diagnostics.
+    static func parseWithTiming(_ raw: String) -> (lines: [DiffLine], elapsedMs: Double) {
+        let clock = ContinuousClock()
+        let start = clock.now
 
-        for line in raw.components(separatedBy: "\n") {
+        var result: [DiffLine] = []
+        result.reserveCapacity(max(64, raw.utf8.count / 48))
+
+        var lineNum = 0
+        var addNum = 0
+        var idx = 0
+
+        // `split` is lighter than `components(separatedBy:)` for large payloads.
+        for piece in raw.split(separator: "\n", omittingEmptySubsequences: false) {
+            let line = String(piece)
+            let kind: DiffLine.Kind
+            let number: Int?
+
             if line.hasPrefix("diff --git") || line.hasPrefix("index ") ||
-               line.hasPrefix("--- ") || line.hasPrefix("+++ ") ||
-               line.hasPrefix("new file") || line.hasPrefix("deleted file") {
-                result.append(DiffLine(number: nil, content: line, kind: .fileHeader))
+                line.hasPrefix("--- ") || line.hasPrefix("+++ ") ||
+                line.hasPrefix("new file") || line.hasPrefix("deleted file") {
+                kind = .fileHeader
+                number = nil
             } else if line.hasPrefix("@@") {
-                // Parse hunk header to get starting line numbers
-                // Format: @@ -l,s +l,s @@
                 if let range = line.range(of: #"\+(\d+)"#, options: .regularExpression) {
                     let numStr = String(line[range]).dropFirst()
                     addNum = (Int(numStr) ?? 1) - 1
                     lineNum = addNum
                 }
-                result.append(DiffLine(number: nil, content: line, kind: .header))
+                kind = .header
+                number = nil
             } else if line.hasPrefix("+") {
                 addNum += 1
-                result.append(DiffLine(number: addNum, content: line, kind: .addition))
+                kind = .addition
+                number = addNum
             } else if line.hasPrefix("-") {
                 lineNum += 1
-                result.append(DiffLine(number: lineNum, content: line, kind: .deletion))
+                kind = .deletion
+                number = lineNum
             } else {
                 lineNum += 1
-                addNum  += 1
-                result.append(DiffLine(number: lineNum, content: line, kind: .context))
+                addNum += 1
+                kind = .context
+                number = lineNum
             }
+
+            result.append(DiffLine(id: idx, number: number, content: line, kind: kind))
+            idx += 1
         }
 
-        return result
+        let elapsed = start.duration(to: clock.now)
+        return (result, milliseconds(for: elapsed))
+    }
+
+    private static func milliseconds(for duration: Duration) -> Double {
+        let comps = duration.components
+        return (Double(comps.seconds) * 1_000) + (Double(comps.attoseconds) / 1_000_000_000_000_000)
     }
 }
 
@@ -60,16 +85,22 @@ enum DiffParser {
 struct DiffView: View {
 
     let diffText: String
+    var onParseMetrics: ((Double, Int) -> Void)? = nil
 
-    private var lines: [DiffLine] {
-        DiffParser.parse(diffText)
-    }
+    @State private var lines: [DiffLine] = []
 
     var body: some View {
-        if diffText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            emptyState
-        } else {
-            diffContent
+        Group {
+            if diffText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                emptyState
+            } else {
+                diffContent
+            }
+        }
+        .task(id: diffText) {
+            let parsed = DiffParser.parseWithTiming(diffText)
+            lines = parsed.lines
+            onParseMetrics?(parsed.elapsedMs, parsed.lines.count)
         }
     }
 
@@ -100,6 +131,7 @@ struct DiffView: View {
                 }
             }
             .padding(.vertical, 4)
+            .textSelection(.enabled)
         }
         .background(Color(nsColor: .textBackgroundColor))
     }
@@ -107,21 +139,17 @@ struct DiffView: View {
     @ViewBuilder
     private func diffRow(for line: DiffLine) -> some View {
         HStack(spacing: 0) {
-            // Line number gutter
             lineNumberGutter(for: line)
 
-            // Diff prefix character (+/-/ )
             Text(linePrefix(for: line))
                 .font(.system(size: 12, design: .monospaced))
                 .foregroundStyle(prefixColor(for: line))
                 .frame(width: 16, alignment: .leading)
                 .padding(.trailing, 2)
 
-            // Line content (strip the leading +/- for display)
             Text(lineContent(for: line))
                 .font(.system(size: 12, design: .monospaced))
                 .foregroundStyle(textColor(for: line))
-                .textSelection(.enabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(rowBackground(for: line))
@@ -146,56 +174,49 @@ struct DiffView: View {
 
     private func rowBackground(for line: DiffLine) -> Color {
         switch line.kind {
-        case .addition:  return Color.green.opacity(0.15)
-        case .deletion:  return Color.red.opacity(0.15)
-        case .header:    return Color.blue.opacity(0.08)
-        case .fileHeader:return Color.purple.opacity(0.08)
-        case .context:   return Color.clear
+        case .addition: return Color.green.opacity(0.15)
+        case .deletion: return Color.red.opacity(0.15)
+        case .header: return Color.blue.opacity(0.08)
+        case .fileHeader: return Color.purple.opacity(0.08)
+        case .context: return Color.clear
         }
     }
 
     private func textColor(for line: DiffLine) -> Color {
         switch line.kind {
-        case .addition:  return Color(nsColor: .controlTextColor)
-        case .deletion:  return Color(nsColor: .controlTextColor)
-        case .header:    return .blue
-        case .fileHeader:return .purple
-        case .context:   return Color(nsColor: .controlTextColor)
+        case .addition, .deletion, .context: return Color(nsColor: .controlTextColor)
+        case .header: return .blue
+        case .fileHeader: return .purple
         }
     }
 
     private func prefixColor(for line: DiffLine) -> Color {
         switch line.kind {
-        case .addition:  return .green
-        case .deletion:  return .red
-        case .header:    return .blue
-        case .fileHeader:return .purple
-        case .context:   return .secondary
+        case .addition: return .green
+        case .deletion: return .red
+        case .header: return .blue
+        case .fileHeader: return .purple
+        case .context: return .secondary
         }
     }
 
     private func linePrefix(for line: DiffLine) -> String {
         switch line.kind {
-        case .addition:  return "+"
-        case .deletion:  return "-"
-        case .header,
-             .fileHeader:return " "
-        case .context:   return " "
+        case .addition: return "+"
+        case .deletion: return "-"
+        case .header, .fileHeader, .context: return " "
         }
     }
 
     private func lineContent(for line: DiffLine) -> String {
         switch line.kind {
         case .addition, .deletion:
-            // Strip leading +/- character already shown in prefix column
             return line.content.count > 1 ? String(line.content.dropFirst()) : ""
         default:
             return line.content.hasPrefix(" ") ? String(line.content.dropFirst()) : line.content
         }
     }
 }
-
-// MARK: - Preview
 
 #if DEBUG
 #Preview {
@@ -211,7 +232,7 @@ struct DiffView: View {
     +
      struct ContentView: View {
     -    var body: some View {
-    -        Text("Hello, world!")
+    -        Text(\"Hello, world!\")
     +    @State private var selection: String? = nil
     +    var body: some View {
     +        NavigationSplitView {
