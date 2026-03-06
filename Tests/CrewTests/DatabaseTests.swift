@@ -106,6 +106,31 @@ final class DatabaseTests: XCTestCase {
         XCTAssertEqual(remaining.count, 0)
     }
 
+    func testPersistAndFetchChatSummary() throws {
+        let repo = Repository(name: "summary-repo", url: "https://github.com/example/summary", localPath: "/tmp/summary-repo")
+        try db.insertRepository(repo)
+        defer { try? db.deleteRepository(id: repo.id) }
+
+        let wt = Worktree(repoId: repo.id, branch: "summary-branch", path: "/tmp/summary-wt")
+        try db.insertWorktree(wt)
+
+        let snapshot = ChatSummarySnapshot(
+            worktreeId: wt.id,
+            summary: "Long chat summary",
+            tocEntries: [ChatTOCEntry(title: "Overview", level: 1, messageId: UUID())],
+            messageCount: 20,
+            characterCount: 6000
+        )
+
+        try db.upsertChatSummary(snapshot)
+        let fetched = try db.fetchChatSummary(forWorktree: wt.id)
+
+        XCTAssertNotNil(fetched)
+        XCTAssertEqual(fetched?.summary, "Long chat summary")
+        XCTAssertEqual(fetched?.tocEntries.first?.title, "Overview")
+        XCTAssertEqual(fetched?.messageCount, 20)
+    }
+
     // MARK: - Review File State Tests
 
     func testPersistViewedFileStatePerWorkspace() throws {
