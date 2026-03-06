@@ -11,17 +11,20 @@ struct ChatInputView: View {
     @Binding var text: String
     let isProcessing: Bool
     let modelName: String?
+    let pendingQuestionPrompt: String?
     let onSend: () -> Void
 
     init(
         text: Binding<String>,
         isProcessing: Bool,
         modelName: String? = nil,
+        pendingQuestionPrompt: String? = nil,
         onSend: @escaping () -> Void
     ) {
         self._text = text
         self.isProcessing = isProcessing
         self.modelName = modelName
+        self.pendingQuestionPrompt = pendingQuestionPrompt
         self.onSend = onSend
     }
 
@@ -29,11 +32,26 @@ struct ChatInputView: View {
         VStack(spacing: 0) {
             Divider()
 
+            if let prompt = pendingQuestionPrompt {
+                HStack(spacing: 6) {
+                    Image(systemName: "bolt.fill")
+                        .font(.caption)
+                    Text("Awaiting answer: \(prompt)")
+                        .font(.caption)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                }
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+            }
+
             HStack(alignment: .bottom, spacing: 8) {
                 // Multi-line input
                 ChatTextEditor(
                     text: $text,
                     isDisabled: isProcessing,
+                    autoFocus: pendingQuestionPrompt != nil,
                     onSend: handleSend
                 )
                 .frame(minHeight: 36, maxHeight: 120)
@@ -54,7 +72,7 @@ struct ChatInputView: View {
                 .buttonStyle(.plain)
                 .disabled(!canSend && !isProcessing)
                 .keyboardShortcut(.return, modifiers: [])
-                .help(isProcessing ? "Stop" : "Send (Return)")
+                .help(isProcessing ? "Stop" : (pendingQuestionPrompt == nil ? "Send (Return)" : "Submit answer (Return)"))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -92,6 +110,7 @@ struct ChatInputView: View {
 private struct ChatTextEditor: NSViewRepresentable {
     @Binding var text: String
     let isDisabled: Bool
+    let autoFocus: Bool
     let onSend: () -> Void
 
     func makeCoordinator() -> Coordinator {
@@ -139,6 +158,15 @@ private struct ChatTextEditor: NSViewRepresentable {
         }
         textView.isEditable = !isDisabled
         textView.alphaValue = isDisabled ? 0.5 : 1.0
+
+        if autoFocus,
+           !isDisabled,
+           let window = textView.window,
+           window.firstResponder !== textView {
+            DispatchQueue.main.async {
+                window.makeFirstResponder(textView)
+            }
+        }
     }
 
     // MARK: - Coordinator
@@ -188,6 +216,7 @@ private final class ChatNSTextView: NSTextView {
         text: $text,
         isProcessing: false,
         modelName: "claude-sonnet-4",
+        pendingQuestionPrompt: nil,
         onSend: { print("send: \(text)"); text = "" }
     )
     .frame(width: 600)

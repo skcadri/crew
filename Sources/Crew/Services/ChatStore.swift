@@ -13,6 +13,12 @@ final class ChatStore: ObservableObject {
     /// True while an agent response is being streamed.
     @Published var isLoading: Bool = false
 
+    /// Non-nil while the agent is waiting for the user's answer.
+    @Published private(set) var pendingQuestion: PendingQuestion?
+
+    /// Flow is paused until `pendingQuestion` gets an answer.
+    @Published private(set) var isFlowPaused: Bool = false
+
     // MARK: - Current worktree
 
     private(set) var currentWorktreeId: UUID?
@@ -28,9 +34,13 @@ final class ChatStore: ObservableObject {
         currentWorktreeId = worktreeId
         do {
             messages = try Database.shared.fetchMessages(forWorktree: worktreeId)
+            pendingQuestion = try Database.shared.fetchPendingQuestion(forWorktree: worktreeId)
+            isFlowPaused = pendingQuestion != nil
         } catch {
             print("[ChatStore] loadMessages error: \(error)")
             messages = []
+            pendingQuestion = nil
+            isFlowPaused = false
         }
     }
 
@@ -81,6 +91,37 @@ final class ChatStore: ObservableObject {
     /// Clears all messages for the current worktree from memory only (not DB).
     func clearMemory() {
         messages = []
+        pendingQuestion = nil
+        isFlowPaused = false
         currentWorktreeId = nil
+    }
+
+    // MARK: - Ask User flow
+
+    /// Records a structured question and pauses agent flow until answered.
+    func setPendingQuestion(worktreeId: UUID, prompt: String) {
+        let question = PendingQuestion(worktreeId: worktreeId, prompt: prompt)
+        do {
+            try Database.shared.upsertPendingQuestion(question)
+            pendingQuestion = question
+            isFlowPaused = true
+            isLoading = false
+        } catch {
+            print("[ChatStore] setPendingQuestion persist error: \(error)")
+        }
+    }
+
+    /// Persists user answer, clears pending-question state, and resumes flow.
+    @discardableResult
+    func submitPendingQuestionResponse(worktreeId: UUID, response: String) -> ChatMessage {
+        let answer = addMessage(worktreeId: worktreeId, role: .user, content: response)
+        do {
+            try Database.shared.clearPendingQuestion(forWorktree: worktreeId)
+        } catch {
+            print("[ChatStore] clearPendingQuestion error: \(error)")
+        }
+        pendingQuestion = nil
+        isFlowPaused = false
+        return answer
     }
 }

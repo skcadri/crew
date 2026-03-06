@@ -41,6 +41,13 @@ struct ChatView: View {
                                 .padding(.vertical, 8)
                         }
 
+                        if let pendingQuestion = store.pendingQuestion {
+                            PendingQuestionCard(question: pendingQuestion)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .id("pending-question")
+                        }
+
                         // Invisible anchor for scrolling to bottom
                         Color.clear
                             .frame(height: 1)
@@ -77,6 +84,7 @@ struct ChatView: View {
                 text: $inputText,
                 isProcessing: store.isLoading,
                 modelName: modelName,
+                pendingQuestionPrompt: store.pendingQuestion?.prompt,
                 onSend: sendMessage
             )
         }
@@ -90,8 +98,42 @@ struct ChatView: View {
         guard !trimmed.isEmpty else { return }
         inputText = ""
 
+        if store.pendingQuestion != nil {
+            _ = store.submitPendingQuestionResponse(worktreeId: worktreeId, response: trimmed)
+            return
+        }
+
         // Add user message
         store.addMessage(worktreeId: worktreeId, role: .user, content: trimmed)
+    }
+}
+
+private struct PendingQuestionCard: View {
+    let question: PendingQuestion
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Question from Agent", systemImage: "questionmark.bubble")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Text(question.prompt)
+                .font(.body)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text("Answer below to resume agent flow")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.yellow.opacity(0.12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Color.yellow.opacity(0.35), lineWidth: 1)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
 
