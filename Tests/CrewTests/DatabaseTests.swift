@@ -127,6 +127,31 @@ final class DatabaseTests: XCTestCase {
         XCTAssertFalse(bViewed.contains(path))
     }
 
+    // MARK: - Plan Mode State Tests
+
+    func testPlanStatePersistsPerWorktree() throws {
+        let repo = Repository(name: "plan-repo", url: "https://github.com/example/plan", localPath: "/tmp/plan-repo")
+        try db.insertRepository(repo)
+        defer { try? db.deleteRepository(id: repo.id) }
+
+        let wt = Worktree(repoId: repo.id, branch: "plan-mode", path: "/tmp/plan-wt")
+        try db.insertWorktree(wt)
+
+        let initial = PlanState(worktreeId: wt.id, status: .awaitingApproval, planText: "Draft", feedback: nil)
+        try db.upsertPlanState(initial)
+
+        var fetched = try db.fetchPlanState(forWorktree: wt.id)
+        XCTAssertEqual(fetched?.status, .awaitingApproval)
+        XCTAssertEqual(fetched?.planText, "Draft")
+
+        let updated = PlanState(worktreeId: wt.id, status: .approved, planText: "Draft", feedback: "Ship it")
+        try db.upsertPlanState(updated)
+
+        fetched = try db.fetchPlanState(forWorktree: wt.id)
+        XCTAssertEqual(fetched?.status, .approved)
+        XCTAssertEqual(fetched?.feedback, "Ship it")
+    }
+
     // MARK: - AgentType Tests
 
     func testAgentTypeDisplayNames() {

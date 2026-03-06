@@ -72,10 +72,17 @@ struct ChatView: View {
                 }
             }
 
+            if store.isAwaitingPlanApproval {
+                PlanApprovalCard(store: store)
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 8)
+            }
+
             // ── Input bar ────────────────────────────────────────────────
             ChatInputView(
                 text: $inputText,
                 isProcessing: store.isLoading,
+                isInputLocked: store.isAwaitingPlanApproval,
                 modelName: modelName,
                 onSend: sendMessage
             )
@@ -88,10 +95,59 @@ struct ChatView: View {
     private func sendMessage() {
         let trimmed = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
+
+        // Prevent execution continuation until plan approval.
+        guard store.canContinueExecution else { return }
+
         inputText = ""
 
-        // Add user message
+        // Add user message, then enter explicit plan stage.
         store.addMessage(worktreeId: worktreeId, role: .user, content: trimmed)
+        store.startPlanApproval(for: trimmed, worktreeId: worktreeId)
+    }
+}
+
+// MARK: - PlanApprovalCard
+
+private struct PlanApprovalCard: View {
+    @ObservedObject var store: ChatStore
+    @State private var feedback: String = ""
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Plan approval required")
+                .font(.headline)
+            Text("Review the proposed plan above, then approve or reject before execution continues.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            TextField("Optional feedback", text: $feedback)
+
+            HStack(spacing: 8) {
+                Button("Approve") {
+                    store.approvePlan()
+                    feedback = ""
+                }
+                .buttonStyle(.borderedProminent)
+
+                Button("Approve with Feedback") {
+                    store.approvePlan(feedback: feedback)
+                    feedback = ""
+                }
+                .buttonStyle(.bordered)
+                .disabled(feedback.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                Button("Reject") {
+                    store.rejectPlan(reason: feedback)
+                    feedback = ""
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
+            }
+        }
+        .padding(10)
+        .background(Color(nsColor: .controlBackgroundColor))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 

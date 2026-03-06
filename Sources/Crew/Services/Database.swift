@@ -63,6 +63,14 @@ final class Database {
     private let msgContent    = Expression<String>("content")
     private let msgTimestamp  = Expression<Int64>("timestamp")
 
+    // ---- plan_states ----
+    private let planStates        = Table("plan_states")
+    private let planWorktreeId    = Expression<String>("worktree_id")
+    private let planStatus        = Expression<String>("status")
+    private let planText          = Expression<String>("plan_text")
+    private let planFeedback      = Expression<String?>("feedback")
+    private let planUpdatedAt     = Expression<Int64>("updated_at")
+
     // ---- check_todos ----
     private let checkTodos         = Table("check_todos")
     private let todoId             = Expression<String>("id")
@@ -156,7 +164,10 @@ final class Database {
             SQLiteMigration(version: 2, label: "Phase A integration state") { [self] db in
                 try self.createPhaseAIntegrationTables(on: db)
             },
-            SQLiteMigration(version: 3, label: "Phase B integration state") { [self] db in
+            SQLiteMigration(version: 3, label: "Plan mode approval state") { [self] db in
+                try self.createPlanStateTable(on: db)
+            },
+            SQLiteMigration(version: 4, label: "Phase B integration state") { [self] db in
                 try self.createPhaseBIntegrationTables(on: db)
             }
         ], on: db)
@@ -255,6 +266,17 @@ final class Database {
             t.column(phaseACommentUpdatedAt)
             t.foreignKey(phaseACommentWorktreeId, references: worktrees, wtId, delete: .cascade)
             t.unique(phaseACommentWorktreeId, phaseACommentProvider, phaseACommentExternalId)
+        })
+    }
+
+    private func createPlanStateTable(on db: Connection) throws {
+        try db.run(planStates.create(ifNotExists: true) { t in
+            t.column(planWorktreeId, primaryKey: true)
+            t.column(planStatus, defaultValue: PlanApprovalStatus.none.rawValue)
+            t.column(planText, defaultValue: "")
+            t.column(planFeedback)
+            t.column(planUpdatedAt)
+            t.foreignKey(planWorktreeId, references: worktrees, wtId, delete: .cascade)
         })
     }
 
@@ -557,6 +579,46 @@ extension Database {
             content:     row[msgContent],
             timestamp:   Date(timeIntervalSince1970: Double(row[msgTimestamp]))
         )
+    }
+}
+
+// MARK: - Plan Mode State CRUD
+
+extension Database {
+
+    func fetchPlanState(forWorktree worktreeId: UUID) throws -> PlanState? {
+        let query = planStates.filter(planWorktreeId == worktreeId.uuidString)
+        return try db.pluck(query).map { row in
+            PlanState(
+                worktreeId: UUID(uuidString: row[planWorktreeId])!,
+                status: PlanApprovalStatus(rawValue: row[planStatus]) ?? .none,
+                planText: row[planText],
+                feedback: row[planFeedback],
+                updatedAt: Date(timeIntervalSince1970: Double(row[planUpdatedAt]))
+            )
+        }
+    }
+
+    func upsertPlanState(_ state: PlanState) throws {
+        let now = Int64(state.updatedAt.timeIntervalSince1970)
+        let row = planStates.filter(planWorktreeId == state.worktreeId.uuidString)
+
+        if try db.pluck(row) != nil {
+            try db.run(row.update(
+                planStatus <- state.status.rawValue,
+                planText <- state.planText,
+                planFeedback <- state.feedback,
+                planUpdatedAt <- now
+            ))
+        } else {
+            try db.run(planStates.insert(
+                planWorktreeId <- state.worktreeId.uuidString,
+                planStatus <- state.status.rawValue,
+                planText <- state.planText,
+                planFeedback <- state.feedback,
+                planUpdatedAt <- now
+            ))
+        }
     }
 }
 
