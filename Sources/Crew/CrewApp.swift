@@ -9,12 +9,32 @@ struct CrewApp: App {
         }
         .defaultSize(width: 1400, height: 900)
         .commands {
-            CommandGroup(replacing: .newItem) {
-                Button("New Workspace") {
-                    // TICKET-004: Wire up workspace creation
-                }
-                .keyboardShortcut("n", modifiers: .command)
-            }
+            CrewCommands()
         }
+
+        // MARK: Settings window (⌘,)
+        Settings {
+            SettingsPlaceholderView()
+        }
+    }
+}
+
+// MARK: - Settings placeholder
+
+/// Lightweight settings view until TICKET-010 is fully wired up.
+private struct SettingsPlaceholderView: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "gear")
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+            Text("Settings")
+                .font(.title2)
+                .fontWeight(.medium)
+            Text("API keys and preferences coming soon.")
+                .foregroundStyle(.secondary)
+        }
+        .frame(width: 480, height: 320)
+        .padding()
     }
 }

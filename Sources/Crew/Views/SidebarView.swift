@@ -49,22 +49,38 @@ struct SidebarView: View {
 
             // MARK: Workspaces Section
             Section("Workspaces") {
-                Text("No workspaces yet")
+                // TICKET-004 will populate this section with real WorkspaceRow entries
+                Label("No workspaces yet — click + to add one", systemImage: "tray")
                     .foregroundStyle(.secondary)
                     .font(.callout)
-                // TICKET-004 will populate this section
             }
         }
         .listStyle(.sidebar)
         .navigationTitle("Crew")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showAddRepo = true
+                Menu {
+                    Button {
+                        showAddRepo = true
+                    } label: {
+                        Label("Add Repository", systemImage: "folder.badge.plus")
+                    }
+
+                    Button {
+                        NotificationCenter.default.post(name: .crewNewWorkspace, object: nil)
+                    } label: {
+                        Label("New Workspace", systemImage: "plus.square.on.square")
+                    }
+
+                    Button {
+                        NotificationCenter.default.post(name: .crewNewWorkspaceFromBranch, object: nil)
+                    } label: {
+                        Label("New Workspace from Branch…", systemImage: "arrow.triangle.branch")
+                    }
                 } label: {
                     Image(systemName: "plus")
                 }
-                .help("Add Repository")
+                .help("Add Repository or New Workspace")
             }
         }
         // MARK: Add Repo Sheet

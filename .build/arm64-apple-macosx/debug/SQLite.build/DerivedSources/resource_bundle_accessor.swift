@@ -3,7 +3,7 @@ import Foundation
 extension Foundation.Bundle {
     static let module: Bundle = {
         let mainPath = Bundle.main.bundleURL.appendingPathComponent("SQLite.swift_SQLite.bundle").path
-        let buildPath = "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/SQLite.swift_SQLite.bundle"
+        let buildPath = "/Users/sohaib/crew-worktrees/worker-3/.build/arm64-apple-macosx/debug/SQLite.swift_SQLite.bundle"
 
         let preferredBundle = Bundle(path: mainPath)
 
