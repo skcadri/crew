@@ -9,7 +9,7 @@ final class PhaseBIntegrationTests: XCTestCase {
             workspaceId: UUID(),
             selectedTab: .notes,
             stage: .awaitingQuestionAnswer,
-            latestPlanStatus: .approvedWithFeedback,
+            latestPlanStatus: .approved,
             hasPendingQuestion: true,
             notesPath: ".context/notes.md",
             lastSummaryHeading: "Execution Plan",
@@ -22,7 +22,7 @@ final class PhaseBIntegrationTests: XCTestCase {
         XCTAssertEqual(decoded.workspaceId, original.workspaceId)
         XCTAssertEqual(decoded.selectedTab, .notes)
         XCTAssertEqual(decoded.stage, .awaitingQuestionAnswer)
-        XCTAssertEqual(decoded.latestPlanStatus, .approvedWithFeedback)
+        XCTAssertEqual(decoded.latestPlanStatus, .approved)
         XCTAssertTrue(decoded.hasPendingQuestion)
         XCTAssertEqual(decoded.lastSummaryHeading, "Execution Plan")
     }

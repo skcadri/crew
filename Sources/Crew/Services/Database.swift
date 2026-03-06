@@ -130,6 +130,12 @@ final class Database {
     private let phaseBWorkspaceStatePayload   = Expression<String>("payload_json")
     private let phaseBWorkspaceStateUpdatedAt = Expression<Int64>("updated_at")
 
+    // ---- chat_summaries ----
+    private let chatSummaries              = Table("chat_summaries")
+    private let chatSummaryWorktreeId      = Expression<String>("worktree_id")
+    private let chatSummaryPayload         = Expression<String>("payload_json")
+    private let chatSummaryUpdatedAt       = Expression<Int64>("updated_at")
+
     // MARK: Init
 
     private init() {
@@ -188,6 +194,9 @@ final class Database {
             },
             SQLiteMigration(version: 6, label: "Phase B integration state") { [self] db in
                 try self.createPhaseBIntegrationTables(on: db)
+            },
+            SQLiteMigration(version: 7, label: "Chat summaries") { [self] db in
+                try self.createChatSummaryTable(on: db)
             }
         ], on: db)
     }
@@ -327,6 +336,29 @@ final class Database {
             t.column(phaseBWorkspaceStateUpdatedAt)
             t.foreignKey(phaseBWorkspaceStateWorkspaceId, references: worktrees, wtId, delete: .cascade)
         })
+    }
+
+    private func createChatSummaryTable(on db: Connection) throws {
+        try db.run(chatSummaries.create(ifNotExists: true) { t in
+            t.column(chatSummaryWorktreeId, primaryKey: true)
+            t.column(chatSummaryPayload, defaultValue: "{}")
+            t.column(chatSummaryUpdatedAt, defaultValue: 0)
+            t.foreignKey(chatSummaryWorktreeId, references: worktrees, wtId, delete: .cascade)
+        })
+
+        // Backward-compat for earlier experimental schemas.
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "chat_summaries",
+            column: "payload_json",
+            definitionSQL: "payload_json TEXT NOT NULL DEFAULT '{}'",
+            on: db
+        )
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "chat_summaries",
+            column: "updated_at",
+            definitionSQL: "updated_at INTEGER NOT NULL DEFAULT 0",
+            on: db
+        )
     }
 }
 
@@ -756,6 +788,122 @@ extension Database {
     func clearPendingQuestion(forWorktree worktreeId: UUID) throws {
         let row = pendingQuestions.filter(pendingQuestionWTID == worktreeId.uuidString)
         try db.run(row.delete())
+    }
+}
+
+// MARK: - Chat Summary CRUD
+
+extension Database {
+    func upsertChatSummary(_ snapshot: ChatSummarySnapshot) throws {
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "chat_summaries",
+            column: "payload_json",
+            definitionSQL: "payload_json TEXT NOT NULL DEFAULT '{}'",
+            on: db
+        )
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "chat_summaries",
+            column: "updated_at",
+            definitionSQL: "updated_at INTEGER NOT NULL DEFAULT 0",
+            on: db
+        )
+
+        let now = Int64(Date().timeIntervalSince1970)
+
+        // Compatibility path for legacy summary schema (id/summary/toc_json/message_count/character_count).
+        let hasLegacyColumns = try SQLiteMigrationRunner.columnExists("id", in: "chat_summaries", on: db)
+            && (try SQLiteMigrationRunner.columnExists("summary", in: "chat_summaries", on: db))
+
+        if hasLegacyColumns {
+            let tocJSON = String(decoding: try JSONEncoder().encode(snapshot.tocEntries), as: UTF8.self)
+            try db.run("""
+                INSERT INTO chat_summaries (id, worktree_id, summary, toc_json, message_count, character_count, updated_at, payload_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(worktree_id) DO UPDATE SET
+                    id=excluded.id,
+                    summary=excluded.summary,
+                    toc_json=excluded.toc_json,
+                    message_count=excluded.message_count,
+                    character_count=excluded.character_count,
+                    updated_at=excluded.updated_at,
+                    payload_json=excluded.payload_json
+                """,
+                snapshot.id.uuidString,
+                snapshot.worktreeId.uuidString,
+                snapshot.summary,
+                tocJSON,
+                snapshot.messageCount,
+                snapshot.characterCount,
+                now,
+                String(decoding: try JSONEncoder().encode(snapshot), as: UTF8.self)
+            )
+            return
+        }
+
+        let payload = String(decoding: try JSONEncoder().encode(snapshot), as: UTF8.self)
+        let row = chatSummaries.filter(chatSummaryWorktreeId == snapshot.worktreeId.uuidString)
+
+        if try db.pluck(row) != nil {
+            try db.run(row.update(
+                chatSummaryPayload <- payload,
+                chatSummaryUpdatedAt <- now
+            ))
+        } else {
+            try db.run(chatSummaries.insert(
+                chatSummaryWorktreeId <- snapshot.worktreeId.uuidString,
+                chatSummaryPayload <- payload,
+                chatSummaryUpdatedAt <- now
+            ))
+        }
+    }
+
+    func fetchChatSummary(forWorktree worktreeId: UUID) throws -> ChatSummarySnapshot? {
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "chat_summaries",
+            column: "payload_json",
+            definitionSQL: "payload_json TEXT NOT NULL DEFAULT '{}'",
+            on: db
+        )
+        try SQLiteMigrationRunner.addColumnIfMissing(
+            table: "chat_summaries",
+            column: "updated_at",
+            definitionSQL: "updated_at INTEGER NOT NULL DEFAULT 0",
+            on: db
+        )
+
+        let row = chatSummaries.filter(chatSummaryWorktreeId == worktreeId.uuidString)
+        guard let result = try db.pluck(row) else { return nil }
+
+        let payload = result[chatSummaryPayload]
+        if !payload.isEmpty && payload != "{}" {
+            if let decoded = try? JSONDecoder().decode(ChatSummarySnapshot.self, from: Data(payload.utf8)) {
+                return decoded
+            }
+        }
+
+        // Legacy fallback mapping
+        let hasLegacyColumns = try SQLiteMigrationRunner.columnExists("summary", in: "chat_summaries", on: db)
+            && (try SQLiteMigrationRunner.columnExists("toc_json", in: "chat_summaries", on: db))
+        if hasLegacyColumns {
+            let legacySummary = Expression<String>("summary")
+            let legacyTOC = Expression<String>("toc_json")
+            let legacyMessageCount = Expression<Int>("message_count")
+            let legacyCharacterCount = Expression<Int>("character_count")
+            let legacyUpdatedAt = Expression<Int64>("updated_at")
+
+            let summary = result[legacySummary]
+            let tocEntries = (try? JSONDecoder().decode([ChatTOCEntry].self, from: Data(result[legacyTOC].utf8))) ?? []
+            return ChatSummarySnapshot(
+                worktreeId: worktreeId,
+                summary: summary,
+                tocEntries: tocEntries,
+                messageCount: result[legacyMessageCount],
+                characterCount: result[legacyCharacterCount],
+                updatedAt: Date(timeIntervalSince1970: Double(result[legacyUpdatedAt]))
+            )
+        }
+
+        return nil
     }
 }
 
