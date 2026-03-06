@@ -1,6 +1,29 @@
 import SwiftUI
 import AppKit
 
+struct GitPanelPerfCounters {
+    var refreshCount: Int = 0
+    var skippedRefreshCount: Int = 0
+    var avgRefreshMs: Double = 0
+    var lastRefreshMs: Double = 0
+    var diffLoadCount: Int = 0
+    var lastDiffLoadMs: Double = 0
+    var diffParseMs: Double = 0
+    var diffLineCount: Int = 0
+
+    mutating func recordRefresh(ms: Double) {
+        refreshCount += 1
+        lastRefreshMs = ms
+        let n = Double(refreshCount)
+        avgRefreshMs = ((avgRefreshMs * (n - 1)) + ms) / n
+    }
+
+    mutating func recordDiffLoad(ms: Double) {
+        diffLoadCount += 1
+        lastDiffLoadMs = ms
+    }
+}
+
 // MARK: - GitPanelViewModel
 
 @MainActor
@@ -16,6 +39,15 @@ final class GitPanelViewModel: ObservableObject {
     @Published var viewedFiles: Set<String> = []
     @Published var reviewNotesByFile: [String: String] = [:]
     @Published var reviewSummary: String = ""
+    @Published private(set) var perf = GitPanelPerfCounters()
+
+    private var lastRefreshAt: Date? = nil
+    private var isRefreshInFlight = false
+    private var pendingRefresh = false
+    private let minRefreshInterval: TimeInterval = 0.8
+    private var lastStatusSignature: String = ""
+    private var diffCacheByPath: [String: String] = [:]
+    private var currentDiffPath: String? = nil
 
     // Toast
     @Published var toastMessage: String? = nil
@@ -40,28 +72,70 @@ final class GitPanelViewModel: ObservableObject {
 
     // MARK: Refresh
 
-    func refresh() async {
+    func refresh(force: Bool = false) async {
+        // Coalesce stacked refresh triggers (button mashing / repeated lifecycle events)
+        // into at most one follow-up run after the in-flight refresh completes.
+        if isRefreshInFlight {
+            pendingRefresh = true
+            perf.skippedRefreshCount += 1
+            return
+        }
+
+        if !force,
+           let lastRefreshAt,
+           Date().timeIntervalSince(lastRefreshAt) < minRefreshInterval {
+            perf.skippedRefreshCount += 1
+            return
+        }
+
+        isRefreshInFlight = true
         isLoadingStatus = true
         errorMessage = nil
-        defer { isLoadingStatus = false }
+
+        let clock = ContinuousClock()
+        let startedAt = clock.now
+
+        defer {
+            isLoadingStatus = false
+            isRefreshInFlight = false
+            lastRefreshAt = Date()
+
+            let elapsed = startedAt.duration(to: clock.now)
+            perf.recordRefresh(ms: milliseconds(for: elapsed))
+
+            if pendingRefresh {
+                pendingRefresh = false
+                Task { await refresh(force: true) }
+            }
+        }
 
         do {
             let newChanges = try await GitService.status(repoPath: repoPath)
+            let newSignature = statusSignature(for: newChanges)
+            let statusDidChange = (newSignature != lastStatusSignature)
+            lastStatusSignature = newSignature
+
             changes = newChanges
             checkedFiles = Set(newChanges.map(\.path))
 
             let paths = Set(newChanges.map(\.path))
             viewedFiles = viewedFiles.intersection(paths)
             try? Database.shared.clearViewedFiles(workspaceId: workspaceId, keeping: paths)
+            diffCacheByPath = diffCacheByPath.filter { paths.contains($0.key) }
 
-            // Re-load diff for selected file if it's still present
-            if let sel = selectedFile, newChanges.contains(sel) {
-                await loadDiff(for: sel)
+            // Keep selection stable by path (FileChange identity is intentionally path-based).
+            if let selectedPath = selectedFile?.path,
+               let matching = newChanges.first(where: { $0.path == selectedPath }) {
+                selectedFile = matching
+                if statusDidChange || currentDiffPath != matching.path {
+                    await loadDiff(for: matching)
+                }
             } else if let first = newChanges.first {
                 selectedFile = first
                 await loadDiff(for: first)
             } else {
                 selectedFile = nil
+                currentDiffPath = nil
                 diffText = ""
             }
         } catch {
@@ -72,6 +146,7 @@ final class GitPanelViewModel: ObservableObject {
     // MARK: Select File
 
     func select(_ change: FileChange) {
+        guard selectedFile?.path != change.path else { return }
         selectedFile = change
         Task { await loadDiff(for: change) }
     }
@@ -142,14 +217,48 @@ final class GitPanelViewModel: ObservableObject {
     // MARK: Load Diff
 
     private func loadDiff(for change: FileChange) async {
+        if let cached = diffCacheByPath[change.path] {
+            currentDiffPath = change.path
+            diffText = cached
+            return
+        }
+
         isLoadingDiff = true
-        defer { isLoadingDiff = false }
+        let clock = ContinuousClock()
+        let startedAt = clock.now
+        defer {
+            isLoadingDiff = false
+            let elapsed = startedAt.duration(to: clock.now)
+            perf.recordDiffLoad(ms: milliseconds(for: elapsed))
+        }
 
         do {
-            diffText = try await GitService.diff(repoPath: repoPath, file: change.path)
+            let loaded = try await GitService.diff(repoPath: repoPath, file: change.path)
+            diffCacheByPath[change.path] = loaded
+            currentDiffPath = change.path
+            diffText = loaded
         } catch {
-            diffText = "# Error loading diff: \(error.localizedDescription)"
+            let message = "# Error loading diff: \(error.localizedDescription)"
+            currentDiffPath = change.path
+            diffText = message
         }
+    }
+
+    func recordDiffParseMetrics(ms: Double, lineCount: Int) {
+        perf.diffParseMs = ms
+        perf.diffLineCount = lineCount
+    }
+
+    private func statusSignature(for changes: [FileChange]) -> String {
+        changes
+            .map { "\($0.status.rawValue):\($0.path)" }
+            .sorted()
+            .joined(separator: "|")
+    }
+
+    private func milliseconds(for duration: Duration) -> Double {
+        let comps = duration.components
+        return (Double(comps.seconds) * 1_000) + (Double(comps.attoseconds) / 1_000_000_000_000_000)
     }
 
     // MARK: Toast
@@ -198,7 +307,7 @@ struct GitPanelView: View {
                 repoPath: vm.repoPath,
                 changes: vm.changes
             ) {
-                Task { await vm.refresh() }
+                Task { await vm.refresh(force: true) }
                 vm.showToast("✅ Committed successfully")
             }
         }
@@ -232,6 +341,11 @@ struct GitPanelView: View {
                     .background(Color.orange, in: Capsule())
             }
 
+            Text("R \(Int(vm.perf.lastRefreshMs))ms • D \(Int(vm.perf.lastDiffLoadMs))ms • P \(Int(vm.perf.diffParseMs))ms")
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundStyle(.secondary)
+                .help("Perf: refresh, diff load, diff parse. Skipped refreshes: \(vm.perf.skippedRefreshCount)")
+
             Button {
                 vm.generateReviewSummary()
                 NSPasteboard.general.clearContents()
@@ -245,7 +359,7 @@ struct GitPanelView: View {
             .help("Generate review summary and copy to clipboard")
 
             Button {
-                Task { await vm.refresh() }
+                Task { await vm.refresh(force: true) }
             } label: {
                 Image(systemName: vm.isLoadingStatus ? "arrow.triangle.2.circlepath" : "arrow.clockwise")
                     .rotationEffect(.degrees(vm.isLoadingStatus ? 360 : 0))
@@ -389,7 +503,9 @@ struct GitPanelView: View {
 
                         Divider()
                     }
-                    DiffView(diffText: vm.diffText)
+                    DiffView(diffText: vm.diffText) { parseMs, lineCount in
+                        vm.recordDiffParseMetrics(ms: parseMs, lineCount: lineCount)
+                    }
                 }
             }
         }

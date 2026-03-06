@@ -29,12 +29,13 @@ struct FileChange: Identifiable, Hashable {
         }
     }
 
-    let id: UUID
+    /// Use file path as stable identity so SwiftUI can reuse rows across refreshes.
+    /// This avoids full list churn when `git status` runs repeatedly.
+    var id: String { path }
     let path: String
     let status: Status
 
     init(path: String, status: Status) {
-        self.id     = UUID()
         self.path   = path
         self.status = status
     }
