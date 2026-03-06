@@ -31,6 +31,13 @@ struct CrewCommands: Commands {
         // MARK: Workspace Menu — switching and git actions
 
         CommandMenu("Workspace") {
+            Button("Command Palette…") {
+                NotificationCenter.default.post(name: .crewOpenCommandPalette, object: nil)
+            }
+            .keyboardShortcut("k", modifiers: .command)
+
+            Divider()
+
             // ⌘1–⌘9 to switch workspace tabs
             ForEach(1..<10, id: \.self) { index in
                 Button("Switch to Tab \(index)") {
@@ -61,4 +68,5 @@ extension Notification.Name {
     static let crewCloseTab               = Notification.Name("crew.closeTab")
     static let crewSwitchWorkspaceTab     = Notification.Name("crew.switchWorkspaceTab")
     static let crewCommitAndPush          = Notification.Name("crew.commitAndPush")
+    static let crewOpenCommandPalette     = Notification.Name("crew.openCommandPalette")
 }
