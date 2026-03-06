@@ -63,6 +63,14 @@ final class Database {
     private let msgContent    = Expression<String>("content")
     private let msgTimestamp  = Expression<Int64>("timestamp")
 
+    // ---- check_todos ----
+    private let checkTodos         = Table("check_todos")
+    private let todoId             = Expression<String>("id")
+    private let todoWorktreeId     = Expression<String>("worktree_id")
+    private let todoTitle          = Expression<String>("title")
+    private let todoIsDone         = Expression<Bool>("is_done")
+    private let todoCreatedAt      = Expression<Int64>("created_at")
+
     // MARK: Init
 
     private init() {
@@ -132,6 +140,16 @@ final class Database {
             t.column(msgContent)
             t.column(msgTimestamp)
             t.foreignKey(msgWorktreeId, references: worktrees, wtId, delete: .cascade)
+        })
+
+        // check_todos
+        try db.run(checkTodos.create(ifNotExists: true) { t in
+            t.column(todoId,         primaryKey: true)
+            t.column(todoWorktreeId)
+            t.column(todoTitle)
+            t.column(todoIsDone,     defaultValue: false)
+            t.column(todoCreatedAt)
+            t.foreignKey(todoWorktreeId, references: worktrees, wtId, delete: .cascade)
         })
     }
 }
@@ -346,5 +364,57 @@ extension Database {
             content:     row[msgContent],
             timestamp:   Date(timeIntervalSince1970: Double(row[msgTimestamp]))
         )
+    }
+}
+
+// MARK: - Checks TODO CRUD
+
+extension Database {
+
+    func insertTODOItem(_ item: CheckTODOItem) throws {
+        let insert = checkTodos.insert(
+            todoId         <- item.id.uuidString,
+            todoWorktreeId <- item.worktreeId.uuidString,
+            todoTitle      <- item.title,
+            todoIsDone     <- item.isDone,
+            todoCreatedAt  <- Int64(item.createdAt.timeIntervalSince1970)
+        )
+        do {
+            try db.run(insert)
+        } catch {
+            throw DatabaseError.insertFailed(error.localizedDescription)
+        }
+    }
+
+    func fetchTODOItems(forWorktree worktreeId: UUID) throws -> [CheckTODOItem] {
+        let query = checkTodos
+            .filter(todoWorktreeId == worktreeId.uuidString)
+            .order(todoCreatedAt.asc)
+
+        return try db.prepare(query).map { row in
+            CheckTODOItem(
+                id: UUID(uuidString: row[todoId])!,
+                worktreeId: UUID(uuidString: row[todoWorktreeId])!,
+                title: row[todoTitle],
+                isDone: row[todoIsDone],
+                createdAt: Date(timeIntervalSince1970: Double(row[todoCreatedAt]))
+            )
+        }
+    }
+
+    func updateTODOItemDone(id: UUID, isDone: Bool) throws {
+        let row = checkTodos.filter(todoId == id.uuidString)
+        let count = try db.run(row.update(todoIsDone <- isDone))
+        if count == 0 {
+            throw DatabaseError.notFound("TODO item \(id)")
+        }
+    }
+
+    func deleteTODOItem(id: UUID) throws {
+        let row = checkTodos.filter(todoId == id.uuidString)
+        let count = try db.run(row.delete())
+        if count == 0 {
+            throw DatabaseError.notFound("TODO item \(id)")
+        }
     }
 }

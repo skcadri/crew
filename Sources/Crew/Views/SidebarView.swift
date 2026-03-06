@@ -4,6 +4,7 @@ struct SidebarView: View {
     @Binding var selectedWorkspaceID: String?
 
     @ObservedObject private var repoManager = RepoManager.shared
+    @ObservedObject private var worktreeManager = WorktreeManager.shared
 
     @State private var showAddRepo: Bool = false
     @State private var repoToDelete: Repository? = nil
@@ -49,14 +50,23 @@ struct SidebarView: View {
 
             // MARK: Workspaces Section
             Section("Workspaces") {
-                // TICKET-004 will populate this section with real WorkspaceRow entries
-                Label("No workspaces yet — click + to add one", systemImage: "tray")
-                    .foregroundStyle(.secondary)
-                    .font(.callout)
+                if worktreeManager.worktrees.isEmpty {
+                    Label("No workspaces yet — click + to add one", systemImage: "tray")
+                        .foregroundStyle(.secondary)
+                        .font(.callout)
+                } else {
+                    ForEach(worktreeManager.worktrees) { worktree in
+                        WorkspaceRow(worktree: worktree)
+                            .tag("worktree-\(worktree.id.uuidString)")
+                    }
+                }
             }
         }
         .listStyle(.sidebar)
         .navigationTitle("Crew")
+        .onAppear {
+            worktreeManager.loadAllWorktrees()
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Menu {
