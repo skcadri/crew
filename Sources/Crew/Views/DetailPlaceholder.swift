@@ -23,7 +23,7 @@ struct DetailPlaceholder: View {
                     Image(systemName: "square.3.layers.3d.down.left")
                         .font(.system(size: 56))
                         .foregroundStyle(.tertiary)
-                    Text("Select a workspace")
+                    Text("Select a workspace to begin")
                         .font(.title2)
                         .fontWeight(.medium)
                     Text("Choose a workspace from the sidebar, or create a new one to get started.")
@@ -33,7 +33,7 @@ struct DetailPlaceholder: View {
                         .frame(maxWidth: 320)
 
                     Button(action: {
-                        // TICKET-004: Open new workspace sheet
+                        NotificationCenter.default.post(name: .crewNewWorkspace, object: nil)
                     }) {
                         Label("New Workspace", systemImage: "plus")
                     }
