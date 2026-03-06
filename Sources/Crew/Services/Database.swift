@@ -103,6 +103,12 @@ final class Database {
     private let phaseACommentPayload     = Expression<String>("payload_json")
     private let phaseACommentUpdatedAt   = Expression<Int64>("updated_at")
 
+    // ---- workspace_context_refs ----
+    private let workspaceContextRefs        = Table("workspace_context_refs")
+    private let contextRefWorkspaceId       = Expression<String>("workspace_id")
+    private let contextRefRelativePath      = Expression<String>("relative_path")
+    private let contextRefUpdatedAt         = Expression<Int64>("updated_at")
+
     // MARK: Init
 
     private init() {
@@ -149,6 +155,9 @@ final class Database {
             },
             SQLiteMigration(version: 2, label: "Phase A integration state") { [self] db in
                 try self.createPhaseAIntegrationTables(on: db)
+            },
+            SQLiteMigration(version: 3, label: "Workspace context references") { [self] db in
+                try self.createWorkspaceContextTables(on: db)
             }
         ], on: db)
     }
@@ -246,6 +255,16 @@ final class Database {
             t.column(phaseACommentUpdatedAt)
             t.foreignKey(phaseACommentWorktreeId, references: worktrees, wtId, delete: .cascade)
             t.unique(phaseACommentWorktreeId, phaseACommentProvider, phaseACommentExternalId)
+        })
+    }
+
+    private func createWorkspaceContextTables(on db: Connection) throws {
+        try db.run(workspaceContextRefs.create(ifNotExists: true) { t in
+            t.column(contextRefWorkspaceId)
+            t.column(contextRefRelativePath)
+            t.column(contextRefUpdatedAt)
+            t.primaryKey(contextRefWorkspaceId, contextRefRelativePath)
+            t.foreignKey(contextRefWorkspaceId, references: worktrees, wtId, delete: .cascade)
         })
     }
 }
@@ -393,6 +412,61 @@ extension Database {
             selectedModel: row[wtSelectedModel],
             createdAt:     Date(timeIntervalSince1970: Double(row[wtCreatedAt]))
         )
+    }
+}
+
+// MARK: - Workspace Context References
+
+extension Database {
+
+    func fetchContextRefs(worktreeId: UUID) throws -> [ContextFileReference] {
+        let query = workspaceContextRefs
+            .filter(contextRefWorkspaceId == worktreeId.uuidString)
+            .order(contextRefRelativePath.asc)
+
+        return try db.prepare(query).map { row in
+            ContextFileReference(
+                relativePath: row[contextRefRelativePath],
+                updatedAt: Date(timeIntervalSince1970: Double(row[contextRefUpdatedAt]))
+            )
+        }
+    }
+
+    func upsertContextRef(worktreeId: UUID, relativePath: String) throws {
+        let now = Int64(Date().timeIntervalSince1970)
+        let row = workspaceContextRefs.filter(
+            contextRefWorkspaceId == worktreeId.uuidString &&
+            contextRefRelativePath == relativePath
+        )
+
+        if try db.pluck(row) != nil {
+            try db.run(row.update(contextRefUpdatedAt <- now))
+        } else {
+            try db.run(workspaceContextRefs.insert(
+                contextRefWorkspaceId <- worktreeId.uuidString,
+                contextRefRelativePath <- relativePath,
+                contextRefUpdatedAt <- now
+            ))
+        }
+    }
+
+    func deleteContextRef(worktreeId: UUID, relativePath: String) throws {
+        let row = workspaceContextRefs.filter(
+            contextRefWorkspaceId == worktreeId.uuidString &&
+            contextRefRelativePath == relativePath
+        )
+        try db.run(row.delete())
+    }
+
+    func replaceContextRefs(worktreeId: UUID, relativePaths: Set<String>) throws {
+        let existing = try Set(fetchContextRefs(worktreeId: worktreeId).map(\.relativePath))
+
+        for path in existing.subtracting(relativePaths) {
+            try deleteContextRef(worktreeId: worktreeId, relativePath: path)
+        }
+        for path in relativePaths {
+            try upsertContextRef(worktreeId: worktreeId, relativePath: path)
+        }
     }
 }
 

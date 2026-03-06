@@ -10,15 +10,20 @@ struct ChatView: View {
 
     @ObservedObject var store: ChatStore
     let worktreeId: UUID
+    let workspacePath: String
     let modelName: String?
+
+    @State private var selectedContextFiles: Set<String> = []
+    @State private var showContextPicker: Bool = false
 
     @State private var inputText: String = ""
     /// Used to programmatically scroll to the bottom when new messages arrive.
     @State private var scrollID: UUID = UUID()
 
-    init(store: ChatStore, worktreeId: UUID, modelName: String? = nil) {
+    init(store: ChatStore, worktreeId: UUID, workspacePath: String, modelName: String? = nil) {
         self.store = store
         self.worktreeId = worktreeId
+        self.workspacePath = workspacePath
         self.modelName = modelName
     }
 
@@ -66,13 +71,56 @@ struct ChatView: View {
                 .onAppear {
                     // Load messages and scroll to bottom
                     store.loadMessages(worktreeId: worktreeId)
+                    loadContextSelection()
+                    _ = try? ContextFileService.shared.ensureContextDirectory(workspacePath: workspacePath)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         proxy.scrollTo("bottom", anchor: .bottom)
                     }
                 }
             }
 
-            // ── Input bar ────────────────────────────────────────────────
+            // ── Context strip + Input bar ───────────────────────────────
+            HStack(spacing: 8) {
+                Button {
+                    showContextPicker.toggle()
+                } label: {
+                    Label(
+                        selectedContextFiles.isEmpty
+                        ? "Attach context"
+                        : "\(selectedContextFiles.count) context file\(selectedContextFiles.count == 1 ? "" : "s")",
+                        systemImage: "paperclip"
+                    )
+                    .font(.caption)
+                }
+                .buttonStyle(.bordered)
+                .popover(isPresented: $showContextPicker) {
+                    ContextPickerView(
+                        workspacePath: workspacePath,
+                        selectedFiles: selectedContextFiles,
+                        onToggle: toggleContextFile
+                    )
+                }
+
+                if !selectedContextFiles.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            ForEach(selectedContextFiles.sorted(), id: \.self) { file in
+                                Text(file)
+                                    .font(.caption2)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color(nsColor: .controlBackgroundColor))
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+
             ChatInputView(
                 text: $inputText,
                 isProcessing: store.isLoading,
@@ -90,8 +138,37 @@ struct ChatView: View {
         guard !trimmed.isEmpty else { return }
         inputText = ""
 
-        // Add user message
-        store.addMessage(worktreeId: worktreeId, role: .user, content: trimmed)
+        // Add user message with attached .context payload when selected.
+        let finalMessage = buildMessageWithContext(userMessage: trimmed)
+        store.addMessage(worktreeId: worktreeId, role: .user, content: finalMessage)
+    }
+
+    private func buildMessageWithContext(userMessage: String) -> String {
+        guard !selectedContextFiles.isEmpty else { return userMessage }
+
+        var sections: [String] = [userMessage, "", "Attached workspace context files:"]
+
+        for file in selectedContextFiles.sorted() {
+            let content = (try? ContextFileService.shared.readFile(workspacePath: workspacePath, relativePath: file)) ?? "[Unable to read file]"
+            sections.append("\n--- .context/\(file) ---\n\(content)")
+        }
+
+        return sections.joined(separator: "\n")
+    }
+
+    private func toggleContextFile(_ relativePath: String) {
+        if selectedContextFiles.contains(relativePath) {
+            selectedContextFiles.remove(relativePath)
+        } else {
+            selectedContextFiles.insert(relativePath)
+        }
+
+        try? Database.shared.replaceContextRefs(worktreeId: worktreeId, relativePaths: selectedContextFiles)
+    }
+
+    private func loadContextSelection() {
+        let refs = (try? Database.shared.fetchContextRefs(worktreeId: worktreeId)) ?? []
+        selectedContextFiles = Set(refs.map(\.relativePath))
     }
 }
 
@@ -144,6 +221,7 @@ private struct TypingIndicator: View {
     return ChatView(
         store: store,
         worktreeId: UUID(),
+        workspacePath: "/tmp/crew-preview",
         modelName: "claude-sonnet-4"
     )
     .frame(width: 600, height: 500)
