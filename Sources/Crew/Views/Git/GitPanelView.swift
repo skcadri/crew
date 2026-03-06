@@ -4,6 +4,13 @@ import SwiftUI
 
 @MainActor
 final class GitPanelViewModel: ObservableObject {
+    enum InspectorTab: String, CaseIterable, Identifiable {
+        case diff = "Diff"
+        case comments = "Comments"
+
+        var id: String { rawValue }
+    }
+
     @Published var changes: [FileChange] = []
     @Published var selectedFile: FileChange? = nil
     @Published var diffText: String = ""
@@ -13,11 +20,28 @@ final class GitPanelViewModel: ObservableObject {
     @Published var showCommitSheet: Bool = false
     @Published var checkedFiles: Set<String> = []
 
+    @Published var selectedInspectorTab: InspectorTab = .diff
+    @Published var isLoadingComments: Bool = false
+    @Published var prCommentError: String? = nil
+    @Published var prComments: [PRReviewComment] = []
+    @Published var currentPRNumber: Int? = nil
+    @Published var locallyAddressedCommentIDs: Set<String> = []
+
     // Toast
     @Published var toastMessage: String? = nil
     private var toastTask: Task<Void, Never>? = nil
 
     let repoPath: String
+
+    var groupedPRComments: [PRCommentFileGroup] {
+        Dictionary(grouping: prComments, by: \.path)
+            .map { path, comments in
+                PRCommentFileGroup(path: path, comments: comments.sorted { lhs, rhs in
+                    (lhs.line ?? Int.max, lhs.id) < (rhs.line ?? Int.max, rhs.id)
+                })
+            }
+            .sorted { $0.path < $1.path }
+    }
 
     init(repoPath: String) {
         self.repoPath = repoPath
@@ -47,6 +71,35 @@ final class GitPanelViewModel: ObservableObject {
             }
         } catch {
             errorMessage = error.localizedDescription
+        }
+
+        await refreshPRComments()
+    }
+
+    func refreshPRComments() async {
+        isLoadingComments = true
+        prCommentError = nil
+        defer { isLoadingComments = false }
+
+        do {
+            let snapshot = try await GitHubPRCommentSyncService.fetchCurrentPRComments(repoPath: repoPath)
+            prComments = snapshot.comments
+            currentPRNumber = snapshot.pullRequestNumber
+
+            let knownIDs = Set(snapshot.comments.map(\.id))
+            locallyAddressedCommentIDs = locallyAddressedCommentIDs.intersection(knownIDs)
+        } catch {
+            currentPRNumber = nil
+            prComments = []
+            prCommentError = error.localizedDescription
+        }
+    }
+
+    func toggleLocallyAddressed(_ comment: PRReviewComment) {
+        if locallyAddressedCommentIDs.contains(comment.id) {
+            locallyAddressedCommentIDs.remove(comment.id)
+        } else {
+            locallyAddressedCommentIDs.insert(comment.id)
         }
     }
 
@@ -170,26 +223,22 @@ struct GitPanelView: View {
 
             Spacer()
 
-            if selectedTab == .changes {
-                // Changed file count badge
-                if !vm.changes.isEmpty {
-                    Text("\(vm.changes.count)")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.orange, in: Capsule())
-                }
+            if let pr = vm.currentPRNumber {
+                Text("PR #\(pr)")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.blue)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.blue.opacity(0.12), in: Capsule())
+            }
 
-                // Commit
-                Button {
-                    vm.showCommitSheet = true
-                } label: {
-                    Image(systemName: "checkmark.circle")
-                }
-                .buttonStyle(.plain)
-                .disabled(vm.changes.isEmpty)
-                .help("Open commit sheet")
+            if !vm.changes.isEmpty {
+                Text("\(vm.changes.count)")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.orange, in: Capsule())
             }
 
             // Refresh
@@ -206,7 +255,18 @@ struct GitPanelView: View {
                     )
             }
             .buttonStyle(.plain)
-            .help(selectedTab == .checks ? "Refresh checks panel" : "Refresh git status")
+            .help(selectedTab == .checks ? "Refresh checks panel" : "Refresh git status and PR comments")
+
+            if selectedTab == .changes {
+                Button {
+                    vm.showCommitSheet = true
+                } label: {
+                    Image(systemName: "checkmark.circle")
+                }
+                .buttonStyle(.plain)
+                .disabled(vm.changes.isEmpty)
+                .help("Open commit sheet")
+            }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
@@ -235,23 +295,24 @@ struct GitPanelView: View {
                 .foregroundStyle(.secondary)
             Text("Checks panel integration ready")
                 .font(.callout.weight(.medium))
-            Text("A2/A3 can plug provider-backed checks into this tab via shared models/adapters.")
+            Text("Use the Checks tab for TODOs and readiness. This inspector tab is reserved for provider-backed checks.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .frame(maxWidth: 280)
+                .frame(maxWidth: 300)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    // MARK: - Content split (file list + diff)
+    // MARK: - Content split (file list + inspector)
+
 
     private var contentSplit: some View {
         VSplitView {
             fileList
                 .frame(minHeight: 80, maxHeight: 220)
 
-            diffPanel
+            inspectorPanel
                 .frame(minHeight: 120, maxHeight: .infinity)
         }
     }
@@ -281,6 +342,38 @@ struct GitPanelView: View {
             }
             .padding(.horizontal, 6)
             .padding(.vertical, 4)
+        }
+    }
+
+    // MARK: - Inspector panel
+
+    private var inspectorPanel: some View {
+        VStack(spacing: 0) {
+            Picker("View", selection: $vm.selectedInspectorTab) {
+                ForEach(GitPanelViewModel.InspectorTab.allCases) { tab in
+                    Text(tab.rawValue).tag(tab)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(8)
+
+            Divider()
+
+            switch vm.selectedInspectorTab {
+            case .diff:
+                diffPanel
+            case .comments:
+                PRCommentsListView(
+                    groups: vm.groupedPRComments,
+                    locallyAddressed: vm.locallyAddressedCommentIDs,
+                    isLoading: vm.isLoadingComments,
+                    errorMessage: vm.prCommentError,
+                    onRefresh: {
+                        Task { await vm.refreshPRComments() }
+                    },
+                    onToggleAddressed: { vm.toggleLocallyAddressed($0) }
+                )
+            }
         }
     }
 
