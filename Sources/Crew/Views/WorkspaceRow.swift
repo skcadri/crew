@@ -5,11 +5,11 @@ import SwiftUI
 struct WorkspaceRow: View {
 
     let worktree: Worktree
+    var onSetStatus: ((WorktreeStatus) -> Void)? = nil
 
     var body: some View {
         HStack(spacing: 8) {
 
-            // ── Status dot ───────────────────────────────────────────────
             Circle()
                 .fill(statusColor)
                 .frame(width: 8, height: 8)
@@ -17,7 +17,6 @@ struct WorkspaceRow: View {
                     Circle().stroke(statusColor.opacity(0.3), lineWidth: 3)
                 )
 
-            // ── Branch + model ───────────────────────────────────────────
             VStack(alignment: .leading, spacing: 1) {
                 Text(worktree.branch)
                     .font(.callout.weight(.medium))
@@ -34,8 +33,24 @@ struct WorkspaceRow: View {
 
             Spacer(minLength: 0)
 
-            // ── Status badge ─────────────────────────────────────────────
-            Text(statusLabel)
+            if let onSetStatus {
+                Menu {
+                    ForEach(WorktreeStatus.allCases) { status in
+                        Button {
+                            onSetStatus(status)
+                        } label: {
+                            Label(status.title, systemImage: status == worktree.status ? "checkmark" : "circle")
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .foregroundStyle(.secondary)
+                }
+                .menuStyle(.borderlessButton)
+                .buttonStyle(.plain)
+            }
+
+            Text(worktree.status.title)
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(statusColor)
                 .padding(.horizontal, 5)
@@ -46,28 +61,16 @@ struct WorkspaceRow: View {
         .contentShape(Rectangle())
     }
 
-    // MARK: - Status helpers
-
     private var statusColor: Color {
         switch worktree.status {
-        case .idle:      return .green
-        case .running:   return .blue
-        case .completed: return .teal
-        case .error:     return .red
-        }
-    }
-
-    private var statusLabel: String {
-        switch worktree.status {
-        case .idle:      return "Idle"
-        case .running:   return "Running"
-        case .completed: return "Done"
-        case .error:     return "Error"
+        case .backlog: return .gray
+        case .inProgress: return .blue
+        case .inReview: return .orange
+        case .done: return .green
+        case .archived: return .secondary
         }
     }
 }
-
-// MARK: - Preview
 
 #if DEBUG
 #Preview {
@@ -76,31 +79,31 @@ struct WorkspaceRow: View {
             repoId:        UUID(),
             branch:        "feature/login-flow",
             path:          "/tmp/ws1",
-            status:        .idle,
+            status:        .backlog,
             selectedModel: AgentType.claudeCode.rawValue
         ))
         WorkspaceRow(worktree: Worktree(
             repoId:        UUID(),
             branch:        "fix/crash-on-launch",
             path:          "/tmp/ws2",
-            status:        .running,
+            status:        .inProgress,
             selectedModel: AgentType.lmStudio.rawValue
         ))
         WorkspaceRow(worktree: Worktree(
             repoId:        UUID(),
             branch:        "chore/update-deps",
             path:          "/tmp/ws3",
-            status:        .completed,
+            status:        .inReview,
             selectedModel: nil
         ))
         WorkspaceRow(worktree: Worktree(
             repoId:        UUID(),
-            branch:        "experiment/new-arch",
+            branch:        "release/1.0",
             path:          "/tmp/ws4",
-            status:        .error,
+            status:        .done,
             selectedModel: AgentType.codex.rawValue
         ))
     }
-    .frame(width: 260, height: 260)
+    .frame(width: 300, height: 260)
 }
 #endif

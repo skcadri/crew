@@ -64,7 +64,7 @@ final class WorktreeManager: ObservableObject {
             repoId:        repoId,
             branch:        branch,
             path:          path,
-            status:        .idle,
+            status:        .backlog,
             selectedModel: model?.rawValue
         )
 
@@ -109,5 +109,9 @@ final class WorktreeManager: ObservableObject {
     /// Returns all worktrees for a given repo, preserving publish-list order.
     func worktrees(for repoId: UUID) -> [Worktree] {
         worktrees.filter { $0.repoId == repoId }
+    }
+
+    func transition(_ worktreeId: UUID, to status: WorktreeStatus) {
+        updateStatus(id: worktreeId, status: status)
     }
 }
