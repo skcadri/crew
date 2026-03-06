@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct CrewApp: App {
     var body: some Scene {
+        // ── Main Window ──────────────────────────────────────────
         WindowGroup {
             ContentView()
                 .frame(minWidth: 1200, minHeight: 800)
@@ -15,6 +16,18 @@ struct CrewApp: App {
                 }
                 .keyboardShortcut("n", modifiers: .command)
             }
+
+            // ── App Preferences shortcut ─────────────────────────
+            // ⌘, is handled automatically by the Settings scene below,
+            // but we keep this group for any future menu additions.
+            CommandGroup(after: .appInfo) {
+                EmptyView()
+            }
+        }
+
+        // ── Settings Window (⌘,) ─────────────────────────────────
+        Settings {
+            SettingsView()
         }
     }
 }
