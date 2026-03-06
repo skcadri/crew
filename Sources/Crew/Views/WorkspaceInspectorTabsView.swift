@@ -4,6 +4,7 @@ struct WorkspaceInspectorTabsView: View {
     enum InspectorTab: String, CaseIterable, Identifiable {
         case git = "Git"
         case checks = "Checks"
+        case notes = "Notes"
 
         var id: String { rawValue }
     }
@@ -31,6 +32,8 @@ struct WorkspaceInspectorTabsView: View {
                     GitPanelView(repoPath: repoPath, workspaceId: worktreeId.uuidString)
                 case .checks:
                     ChecksPanelView(repoPath: repoPath, worktreeId: worktreeId)
+                case .notes:
+                    NotesPanelView(repoPath: repoPath)
                 }
             }
         }
