@@ -63,6 +63,13 @@ final class Database {
     private let msgContent    = Expression<String>("content")
     private let msgTimestamp  = Expression<Int64>("timestamp")
 
+    // ---- review_file_state ----
+    private let reviewFileState   = Table("review_file_state")
+    private let rfsWorkspaceId    = Expression<String>("workspace_id")
+    private let rfsFilePath       = Expression<String>("file_path")
+    private let rfsViewed         = Expression<Bool>("viewed")
+    private let rfsUpdatedAt      = Expression<Int64>("updated_at")
+
     // MARK: Init
 
     private init() {
@@ -132,6 +139,15 @@ final class Database {
             t.column(msgContent)
             t.column(msgTimestamp)
             t.foreignKey(msgWorktreeId, references: worktrees, wtId, delete: .cascade)
+        })
+
+        // review_file_state
+        try db.run(reviewFileState.create(ifNotExists: true) { t in
+            t.column(rfsWorkspaceId)
+            t.column(rfsFilePath)
+            t.column(rfsViewed)
+            t.column(rfsUpdatedAt)
+            t.primaryKey(rfsWorkspaceId, rfsFilePath)
         })
     }
 }
@@ -279,6 +295,53 @@ extension Database {
             selectedModel: row[wtSelectedModel],
             createdAt:     Date(timeIntervalSince1970: Double(row[wtCreatedAt]))
         )
+    }
+}
+
+// MARK: - Review File State
+
+extension Database {
+
+    func fetchViewedFiles(workspaceId: String) throws -> Set<String> {
+        let query = reviewFileState
+            .filter(rfsWorkspaceId == workspaceId && rfsViewed == true)
+            .select(rfsFilePath)
+
+        let rows = try db.prepare(query)
+        return Set(rows.map { $0[rfsFilePath] })
+    }
+
+    func setFileViewed(workspaceId: String, filePath: String, viewed: Bool) throws {
+        let now = Int64(Date().timeIntervalSince1970)
+        let row = reviewFileState.filter(
+            rfsWorkspaceId == workspaceId && rfsFilePath == filePath
+        )
+
+        if viewed {
+            if try db.pluck(row) != nil {
+                try db.run(row.update(
+                    rfsViewed <- true,
+                    rfsUpdatedAt <- now
+                ))
+            } else {
+                try db.run(reviewFileState.insert(
+                    rfsWorkspaceId <- workspaceId,
+                    rfsFilePath <- filePath,
+                    rfsViewed <- true,
+                    rfsUpdatedAt <- now
+                ))
+            }
+        } else {
+            try db.run(row.delete())
+        }
+    }
+
+    func clearViewedFiles(workspaceId: String, keeping paths: Set<String>) throws {
+        let existing = try fetchViewedFiles(workspaceId: workspaceId)
+        let stale = existing.subtracting(paths)
+        for path in stale {
+            try setFileViewed(workspaceId: workspaceId, filePath: path, viewed: false)
+        }
     }
 }
 

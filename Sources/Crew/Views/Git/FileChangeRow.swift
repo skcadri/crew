@@ -3,12 +3,14 @@ import SwiftUI
 // MARK: - FileChangeRow
 
 /// A single row in the Git file-change list.
-/// Shows a colour-coded status badge, the file path, and a staging checkbox.
+/// Shows a colour-coded status badge, staging checkbox, and viewed state.
 struct FileChangeRow: View {
 
     let change: FileChange
     @Binding var isChecked: Bool
+    var isViewed: Bool = false
     var isSelected: Bool = false
+    var onToggleViewed: (() -> Void)? = nil
 
     var body: some View {
         HStack(spacing: 6) {
@@ -22,8 +24,7 @@ struct FileChangeRow: View {
             // Status badge
             statusBadge
 
-            // Filename (show only the last path component for readability,
-            // full path in tooltip)
+            // Filename
             Text(displayName)
                 .font(.system(.body, design: .monospaced))
                 .lineLimit(1)
@@ -32,6 +33,16 @@ struct FileChangeRow: View {
                 .help(change.path)
 
             Spacer()
+
+            if let onToggleViewed {
+                Button(action: onToggleViewed) {
+                    Image(systemName: isViewed ? "eye.fill" : "eye.slash")
+                        .font(.caption)
+                        .foregroundStyle(isViewed ? Color.accentColor : .secondary)
+                }
+                .buttonStyle(.plain)
+                .help(isViewed ? "Mark unviewed" : "Mark viewed")
+            }
         }
         .padding(.vertical, 2)
         .padding(.horizontal, 4)
@@ -93,19 +104,13 @@ struct FileChangeRow: View {
         FileChangeRow(
             change: FileChange(path: "Sources/Crew/Views/ContentView.swift", status: .modified),
             isChecked: .constant(true),
+            isViewed: true,
             isSelected: true
         )
         FileChangeRow(
             change: FileChange(path: "Sources/Crew/NewFile.swift", status: .added),
-            isChecked: .constant(false)
-        )
-        FileChangeRow(
-            change: FileChange(path: "Sources/Crew/OldFile.swift", status: .deleted),
-            isChecked: .constant(true)
-        )
-        FileChangeRow(
-            change: FileChange(path: "Notes.md", status: .untracked),
-            isChecked: .constant(false)
+            isChecked: .constant(false),
+            isViewed: false
         )
     }
     .padding()

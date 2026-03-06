@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 // MARK: - GitPanelViewModel
 
@@ -12,15 +13,29 @@ final class GitPanelViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     @Published var showCommitSheet: Bool = false
     @Published var checkedFiles: Set<String> = []
+    @Published var viewedFiles: Set<String> = []
+    @Published var reviewNotesByFile: [String: String] = [:]
+    @Published var reviewSummary: String = ""
 
     // Toast
     @Published var toastMessage: String? = nil
     private var toastTask: Task<Void, Never>? = nil
 
     let repoPath: String
+    let workspaceId: String
 
-    init(repoPath: String) {
+    var viewedCount: Int {
+        changes.filter { viewedFiles.contains($0.path) }.count
+    }
+
+    var isReadyForReview: Bool {
+        !changes.isEmpty && viewedCount == changes.count
+    }
+
+    init(repoPath: String, workspaceId: String) {
         self.repoPath = repoPath
+        self.workspaceId = workspaceId
+        self.viewedFiles = (try? Database.shared.fetchViewedFiles(workspaceId: workspaceId)) ?? []
     }
 
     // MARK: Refresh
@@ -34,6 +49,10 @@ final class GitPanelViewModel: ObservableObject {
             let newChanges = try await GitService.status(repoPath: repoPath)
             changes = newChanges
             checkedFiles = Set(newChanges.map(\.path))
+
+            let paths = Set(newChanges.map(\.path))
+            viewedFiles = viewedFiles.intersection(paths)
+            try? Database.shared.clearViewedFiles(workspaceId: workspaceId, keeping: paths)
 
             // Re-load diff for selected file if it's still present
             if let sel = selectedFile, newChanges.contains(sel) {
@@ -55,6 +74,69 @@ final class GitPanelViewModel: ObservableObject {
     func select(_ change: FileChange) {
         selectedFile = change
         Task { await loadDiff(for: change) }
+    }
+
+    // MARK: Viewed State
+
+    func setViewed(_ viewed: Bool, for filePath: String) {
+        if viewed { viewedFiles.insert(filePath) }
+        else { viewedFiles.remove(filePath) }
+
+        do {
+            try Database.shared.setFileViewed(workspaceId: workspaceId, filePath: filePath, viewed: viewed)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func toggleViewed(for filePath: String) {
+        setViewed(!viewedFiles.contains(filePath), for: filePath)
+    }
+
+    // MARK: Summary
+
+    func generateReviewSummary() {
+        guard !changes.isEmpty else {
+            reviewSummary = "No changed files to review."
+            return
+        }
+
+        let counts = Dictionary(grouping: changes, by: { $0.status }).mapValues(\.count)
+        let unviewed = changes.map(\.path).filter { !viewedFiles.contains($0) }
+        let viewed = changes.map(\.path).filter { viewedFiles.contains($0) }
+
+        var lines: [String] = []
+        lines.append("Review Summary")
+        lines.append("Files: \(changes.count) total • \(viewed.count) viewed • \(unviewed.count) pending")
+        lines.append("Gate: \(isReadyForReview ? "READY" : "NOT READY")")
+        lines.append("")
+        lines.append("Change breakdown:")
+        lines.append("- Modified: \(counts[.modified, default: 0])")
+        lines.append("- Added: \(counts[.added, default: 0])")
+        lines.append("- Deleted: \(counts[.deleted, default: 0])")
+        lines.append("- Renamed: \(counts[.renamed, default: 0])")
+        lines.append("- Copied: \(counts[.copied, default: 0])")
+        lines.append("- Untracked: \(counts[.untracked, default: 0])")
+
+        if !unviewed.isEmpty {
+            lines.append("")
+            lines.append("Pending files:")
+            lines += unviewed.map { "- \($0)" }
+        }
+
+        let comments = reviewNotesByFile
+            .filter { !$0.value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .sorted { $0.key < $1.key }
+
+        if !comments.isEmpty {
+            lines.append("")
+            lines.append("Reviewer notes:")
+            for (path, note) in comments {
+                lines.append("- \(path): \(note.replacingOccurrences(of: "\n", with: " "))")
+            }
+        }
+
+        reviewSummary = lines.joined(separator: "\n")
     }
 
     // MARK: Load Diff
@@ -92,8 +174,8 @@ struct GitPanelView: View {
 
     @StateObject private var vm: GitPanelViewModel
 
-    init(repoPath: String) {
-        _vm = StateObject(wrappedValue: GitPanelViewModel(repoPath: repoPath))
+    init(repoPath: String, workspaceId: String) {
+        _vm = StateObject(wrappedValue: GitPanelViewModel(repoPath: repoPath, workspaceId: workspaceId))
     }
 
     var body: some View {
@@ -139,7 +221,8 @@ struct GitPanelView: View {
 
             Spacer()
 
-            // Changed file count badge
+            gateBadge
+
             if !vm.changes.isEmpty {
                 Text("\(vm.changes.count)")
                     .font(.system(size: 10, weight: .bold))
@@ -149,7 +232,18 @@ struct GitPanelView: View {
                     .background(Color.orange, in: Capsule())
             }
 
-            // Refresh
+            Button {
+                vm.generateReviewSummary()
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(vm.reviewSummary, forType: .string)
+                vm.showToast("Review summary copied")
+            } label: {
+                Image(systemName: "text.alignleft")
+            }
+            .buttonStyle(.plain)
+            .disabled(vm.changes.isEmpty)
+            .help("Generate review summary and copy to clipboard")
+
             Button {
                 Task { await vm.refresh() }
             } label: {
@@ -165,7 +259,6 @@ struct GitPanelView: View {
             .buttonStyle(.plain)
             .help("Refresh git status")
 
-            // Commit
             Button {
                 vm.showCommitSheet = true
             } label: {
@@ -177,6 +270,16 @@ struct GitPanelView: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
+    }
+
+    private var gateBadge: some View {
+        HStack(spacing: 4) {
+            Image(systemName: vm.isReadyForReview ? "checkmark.seal.fill" : "hourglass")
+            Text("\(vm.viewedCount)/\(vm.changes.count) viewed")
+                .font(.caption2.weight(.medium))
+        }
+        .foregroundStyle(vm.isReadyForReview ? Color.green : .secondary)
+        .help(vm.isReadyForReview ? "Ready for review" : "Review pending")
     }
 
     // MARK: - Empty state
@@ -222,7 +325,11 @@ struct GitPanelView: View {
                                 else  { vm.checkedFiles.remove(change.path) }
                             }
                         ),
-                        isSelected: vm.selectedFile?.id == change.id
+                        isViewed: vm.viewedFiles.contains(change.path),
+                        isSelected: vm.selectedFile?.id == change.id,
+                        onToggleViewed: {
+                            vm.toggleViewed(for: change.path)
+                        }
                     )
                     .contentShape(Rectangle())
                     .onTapGesture {
@@ -246,7 +353,7 @@ struct GitPanelView: View {
             } else {
                 VStack(spacing: 0) {
                     if let file = vm.selectedFile {
-                        HStack(spacing: 4) {
+                        HStack(spacing: 6) {
                             Image(systemName: "doc.text")
                                 .foregroundStyle(.secondary)
                                 .font(.caption)
@@ -256,10 +363,29 @@ struct GitPanelView: View {
                                 .lineLimit(1)
                                 .truncationMode(.middle)
                             Spacer()
+
+                            Button(vm.viewedFiles.contains(file.path) ? "Viewed" : "Mark viewed") {
+                                vm.toggleViewed(for: file.path)
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.mini)
                         }
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Color(nsColor: .windowBackgroundColor))
+
+                        Divider()
+
+                        TextField(
+                            "Add review note for this file (optional)",
+                            text: Binding(
+                                get: { vm.reviewNotesByFile[file.path, default: ""] },
+                                set: { vm.reviewNotesByFile[file.path] = $0 }
+                            )
+                        )
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
 
                         Divider()
                     }
@@ -310,7 +436,7 @@ struct GitPanelView: View {
 
 #if DEBUG
 #Preview("Git Panel — with changes") {
-    GitPanelView(repoPath: "/tmp/fake")
+    GitPanelView(repoPath: "/tmp/fake", workspaceId: "preview-workspace")
         .frame(width: 320, height: 600)
 }
 #endif
