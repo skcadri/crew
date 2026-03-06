@@ -78,6 +78,18 @@ final class GitService {
         return candidates.first { FileManager.default.isExecutableFile(atPath: $0) } ?? "git"
     }()
 
+    // MARK: - Workspaces Base Path
+
+    static var workspacesBaseURL: URL {
+        let appSupport = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ).first!
+        return appSupport
+            .appendingPathComponent("Crew", isDirectory: true)
+            .appendingPathComponent("workspaces", isDirectory: true)
+    }
+
     // MARK: - Repos Base Path
 
     static var reposBaseURL: URL {
@@ -209,6 +221,53 @@ final class GitService {
             cwd: repoPath
         )
         return stdout.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    // MARK: - Worktree Operations
+
+    /// Creates a new git worktree at ~/Library/Application Support/Crew/workspaces/<uuid>/
+    /// on a new branch forked from the repo's current HEAD.
+    static func createWorktree(repoPath: String, branch: String) async throws -> String {
+        let uuid = UUID()
+        let destURL = workspacesBaseURL.appendingPathComponent(uuid.uuidString, isDirectory: true)
+
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: workspacesBaseURL.path) {
+            do {
+                try fm.createDirectory(at: workspacesBaseURL, withIntermediateDirectories: true)
+            } catch {
+                throw GitError.directoryCreationFailed(error.localizedDescription)
+            }
+        }
+
+        // git worktree add -b <branch> <path>
+        try await runStatic(args: ["worktree", "add", "-b", branch, destURL.path], cwd: repoPath)
+        return destURL.path
+    }
+
+    /// Returns all worktree paths for the given repo (including the main worktree).
+    static func listWorktrees(repoPath: String) async throws -> [String] {
+        let (stdout, _) = try await runStatic(
+            args: ["worktree", "list", "--porcelain"],
+            cwd: repoPath
+        )
+        var paths: [String] = []
+        for line in stdout.components(separatedBy: "\n") {
+            if line.hasPrefix("worktree ") {
+                let path = String(line.dropFirst("worktree ".count))
+                    .trimmingCharacters(in: .whitespaces)
+                if !path.isEmpty { paths.append(path) }
+            }
+        }
+        return paths
+    }
+
+    /// Removes a worktree (force-removes even if dirty).
+    static func deleteWorktree(repoPath: String, worktreePath: String) async throws {
+        try await runStatic(
+            args: ["worktree", "remove", "--force", worktreePath],
+            cwd: repoPath
+        )
     }
 
     // MARK: - Remove Repo from Disk

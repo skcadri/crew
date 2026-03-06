@@ -3861,6 +3861,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/CodexAgent.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/LMStudioAgent.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/ContentView.swift"
         },
         {
@@ -3889,6 +3897,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/ChatStore.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift"
         },
         {
@@ -3901,11 +3913,51 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/WorktreeManager.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/AddRepoSheet.swift"
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatInputView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/MessageBubble.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/StreamingTextView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/CreateWorkspaceSheet.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/DetailPlaceholder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/CommitSheet.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/DiffView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/FileChangeRow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/GitPanelView.swift"
         },
         {
           "kind" : "file",
@@ -3926,6 +3978,10 @@
         {
           "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Terminal/TerminalView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/WorkspaceRow.swift"
         },
         {
           "kind" : "file",
@@ -3951,6 +4007,8 @@
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentFactory.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentProtocol.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ClaudeCodeAgent.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ContentView.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CrewApp.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentType.swift.o",
@@ -3958,16 +4016,28 @@
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Repository.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentManager.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitService.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/RepoManager.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AddRepoSheet.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DetailPlaceholder.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/InspectorView.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/RepoRow.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/SidebarView.swift.o",
         "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalStore.swift.o",
-        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalView.swift.o"
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalView.swift.o",
+        "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.swift.o"
       ],
       "otherArguments" : [
         "-target",
@@ -4041,6 +4111,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ContentView.swift.o"
         },
         {
@@ -4069,6 +4147,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o"
         },
         {
@@ -4081,11 +4163,51 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AddRepoSheet.swift.o"
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DetailPlaceholder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.swift.o"
         },
         {
           "kind" : "file",
@@ -4109,6 +4231,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules/Crew.swiftmodule"
         }
       ],
@@ -4117,6 +4243,8 @@
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/AgentFactory.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/AgentProtocol.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/ClaudeCodeAgent.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/CodexAgent.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/LMStudioAgent.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/ContentView.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/CrewApp.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/AgentType.swift",
@@ -4124,16 +4252,28 @@
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Repository.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Worktree.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/AgentManager.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/ChatStore.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/GitService.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/RepoManager.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/WorktreeManager.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/AddRepoSheet.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatInputView.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatView.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/MessageBubble.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/StreamingTextView.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/CreateWorkspaceSheet.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/DetailPlaceholder.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/CommitSheet.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/DiffView.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/FileChangeRow.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/GitPanelView.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/InspectorView.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/RepoRow.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/SidebarView.swift",
         "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Terminal/TerminalStore.swift",
-        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Terminal/TerminalView.swift"
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Terminal/TerminalView.swift",
+        "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/WorkspaceRow.swift"
       ],
       "tempsPath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build",
       "wholeModuleOptimization" : false
@@ -4979,6 +5119,8 @@
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/AgentFactory.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/AgentProtocol.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/ClaudeCodeAgent.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/CodexAgent.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/LMStudioAgent.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/ContentView.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/CrewApp.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/AgentType.swift",
@@ -4986,16 +5128,28 @@
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Repository.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Models/Worktree.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/AgentManager.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/ChatStore.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/GitService.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/RepoManager.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/WorktreeManager.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/AddRepoSheet.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatInputView.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatView.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/MessageBubble.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/StreamingTextView.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/CreateWorkspaceSheet.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/DetailPlaceholder.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/CommitSheet.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/DiffView.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/FileChangeRow.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/GitPanelView.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/InspectorView.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/RepoRow.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/SidebarView.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Terminal/TerminalStore.swift",
       "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Terminal/TerminalView.swift",
+      "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/WorkspaceRow.swift",
       "-I",
       "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Modules",
       "-target",
@@ -5442,6 +5596,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/CodexAgent.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/LMStudioAgent.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/ContentView.swift"
         },
         {
@@ -5470,6 +5632,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/ChatStore.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift"
         },
         {
@@ -5482,11 +5648,51 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/WorktreeManager.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/AddRepoSheet.swift"
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatInputView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/MessageBubble.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/StreamingTextView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/CreateWorkspaceSheet.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/DetailPlaceholder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/CommitSheet.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/DiffView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/FileChangeRow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/GitPanelView.swift"
         },
         {
           "kind" : "file",
@@ -5507,6 +5713,10 @@
         {
           "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Terminal/TerminalView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/WorkspaceRow.swift"
         }
       ],
       "outputFilePath" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/sources"
@@ -5540,7 +5750,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.swift.o"
         },
         {
           "kind" : "file",
@@ -5548,7 +5770,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.swift.o"
         },
         {
           "kind" : "file",
@@ -5564,11 +5798,31 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitService.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/InspectorView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.swift.o"
         },
         {
           "kind" : "file",
@@ -5588,6 +5842,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalStore.swift.o"
         },
         {
@@ -5596,7 +5854,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.swift.o"
         },
         {
           "kind" : "file",
@@ -5816,7 +6082,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatMessage.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.swift.o"
         },
         {
           "kind" : "file",
@@ -5824,7 +6102,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.swift.o"
         },
         {
           "kind" : "file",
@@ -5840,11 +6130,31 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitService.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/InspectorView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.swift.o"
         },
         {
           "kind" : "file",
@@ -5864,6 +6174,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalStore.swift.o"
         },
         {
@@ -5872,7 +6186,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Worktree.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.swift.o"
         },
         {
           "kind" : "file",

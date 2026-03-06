@@ -23,6 +23,20 @@
     "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ClaudeCodeAgent.swiftdeps",
     "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ClaudeCodeAgent.dia"
   },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/CodexAgent.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CodexAgent.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Agents/LMStudioAgent.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/LMStudioAgent.dia"
+  },
   "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/ContentView.swift": {
     "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ContentView.d",
     "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ContentView.swift.o",
@@ -72,6 +86,13 @@
     "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentManager.swiftdeps",
     "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AgentManager.dia"
   },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/ChatStore.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatStore.dia"
+  },
   "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/Database.swift": {
     "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.d",
     "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/Database.swift.o",
@@ -93,6 +114,13 @@
     "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/RepoManager.swiftdeps",
     "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/RepoManager.dia"
   },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Services/WorktreeManager.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorktreeManager.dia"
+  },
   "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/AddRepoSheet.swift": {
     "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AddRepoSheet.d",
     "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AddRepoSheet.swift.o",
@@ -100,12 +128,75 @@
     "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AddRepoSheet.swiftdeps",
     "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/AddRepoSheet.dia"
   },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatInputView.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatInputView.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/ChatView.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/ChatView.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/MessageBubble.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/MessageBubble.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Chat/StreamingTextView.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/StreamingTextView.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/CreateWorkspaceSheet.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CreateWorkspaceSheet.dia"
+  },
   "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/DetailPlaceholder.swift": {
     "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DetailPlaceholder.d",
     "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DetailPlaceholder.swift.o",
     "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DetailPlaceholder~partial.swiftmodule",
     "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DetailPlaceholder.swiftdeps",
     "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DetailPlaceholder.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/CommitSheet.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/CommitSheet.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/DiffView.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/DiffView.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/FileChangeRow.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/FileChangeRow.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/Git/GitPanelView.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/GitPanelView.dia"
   },
   "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/InspectorView.swift": {
     "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/InspectorView.d",
@@ -141,5 +232,12 @@
     "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalView~partial.swiftmodule",
     "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalView.swiftdeps",
     "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/TerminalView.dia"
+  },
+  "/Users/sohaib/crew-worktrees/worker-1/Sources/Crew/Views/WorkspaceRow.swift": {
+    "dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.d",
+    "object": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.swift.o",
+    "swiftmodule": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow~partial.swiftmodule",
+    "swift-dependencies": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.swiftdeps",
+    "diagnostics": "/Users/sohaib/crew-worktrees/worker-1/.build/arm64-apple-macosx/debug/Crew.build/WorkspaceRow.dia"
   }
 }
