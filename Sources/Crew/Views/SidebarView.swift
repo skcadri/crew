@@ -74,6 +74,9 @@ struct SidebarView: View {
         }
         .listStyle(.sidebar)
         .navigationTitle("Crew")
+        .onAppear {
+            worktreeManager.loadAllWorktrees()
+        }
         .toolbar {
             ToolbarItem(placement: .secondaryAction) {
                 Menu {

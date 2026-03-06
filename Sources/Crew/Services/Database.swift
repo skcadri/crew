@@ -63,14 +63,22 @@ final class Database {
     private let msgContent    = Expression<String>("content")
     private let msgTimestamp  = Expression<Int64>("timestamp")
 
+    // ---- check_todos ----
+    private let checkTodos         = Table("check_todos")
+    private let todoId             = Expression<String>("id")
+    private let todoWorktreeId     = Expression<String>("worktree_id")
+    private let todoTitle          = Expression<String>("title")
+    private let todoIsDone         = Expression<Bool>("is_done")
+    private let todoCreatedAt      = Expression<Int64>("created_at")
+
     // ---- phase_a_checks ----
-    private let phaseAChecks         = Table("phase_a_checks")
-    private let phaseACheckId        = Expression<String>("id")
+    private let phaseAChecks          = Table("phase_a_checks")
+    private let phaseACheckId         = Expression<String>("id")
     private let phaseACheckWorktreeId = Expression<String>("worktree_id")
-    private let phaseACheckProvider  = Expression<String>("provider")
+    private let phaseACheckProvider   = Expression<String>("provider")
     private let phaseACheckExternalId = Expression<String>("external_id")
-    private let phaseACheckPayload   = Expression<String>("payload_json")
-    private let phaseACheckUpdatedAt = Expression<Int64>("updated_at")
+    private let phaseACheckPayload    = Expression<String>("payload_json")
+    private let phaseACheckUpdatedAt  = Expression<Int64>("updated_at")
 
     // ---- phase_a_review_state ----
     private let phaseAReviewStates          = Table("phase_a_review_states")
@@ -160,23 +168,21 @@ final class Database {
             t.foreignKey(wtRepoId, references: repos, repoId, delete: .cascade)
         })
 
-        // messages
-        try db.run(messages.create(ifNotExists: true) { t in
-            t.column(msgId,         primaryKey: true)
-            t.column(msgWorktreeId)
-            t.column(msgRole)
-            t.column(msgContent)
-            t.column(msgTimestamp)
-            t.foreignKey(msgWorktreeId, references: worktrees, wtId, delete: .cascade)
+        // check_todos
+        try db.run(checkTodos.create(ifNotExists: true) { t in
+            t.column(todoId,         primaryKey: true)
+            t.column(todoWorktreeId)
+            t.column(todoTitle)
+            t.column(todoIsDone,     defaultValue: false)
+            t.column(todoCreatedAt)
+            t.foreignKey(todoWorktreeId, references: worktrees, wtId, delete: .cascade)
         })
 
-        try runMigrations()
+        try runLegacyStatusMigration()
     }
 
-    /// Lightweight schema/data migrations for compatible releases.
-    private func runMigrations() throws {
-        // A1 migration: map legacy status values into lifecycle statuses.
-        // This is idempotent and safe to run on every launch.
+    /// Lightweight data migration for legacy workspace statuses.
+    private func runLegacyStatusMigration() throws {
         let legacyMappings: [(String, WorktreeStatus)] = [
             ("idle", .backlog),
             ("running", .inProgress),
@@ -189,13 +195,11 @@ final class Database {
             try db.run(rows.update(wtStatus <- mapped.rawValue))
         }
 
-        // Normalize any unknown statuses to backlog.
         let validStatuses = WorktreeStatus.allCases.map { "'\($0.rawValue)'" }.joined(separator: ",")
         try db.run("UPDATE worktrees SET status = ? WHERE status NOT IN (\(validStatuses))", WorktreeStatus.backlog.rawValue)
     }
 
     /// Shared persistence envelopes for A2/A3/A4/A5 integration.
-    /// Services in those tickets can map provider payloads into these tables.
     private func createPhaseAIntegrationTables(on db: Connection) throws {
         try db.run(phaseAChecks.create(ifNotExists: true) { t in
             t.column(phaseACheckId, primaryKey: true)
@@ -440,5 +444,57 @@ extension Database {
             content:     row[msgContent],
             timestamp:   Date(timeIntervalSince1970: Double(row[msgTimestamp]))
         )
+    }
+}
+
+// MARK: - Checks TODO CRUD
+
+extension Database {
+
+    func insertTODOItem(_ item: CheckTODOItem) throws {
+        let insert = checkTodos.insert(
+            todoId         <- item.id.uuidString,
+            todoWorktreeId <- item.worktreeId.uuidString,
+            todoTitle      <- item.title,
+            todoIsDone     <- item.isDone,
+            todoCreatedAt  <- Int64(item.createdAt.timeIntervalSince1970)
+        )
+        do {
+            try db.run(insert)
+        } catch {
+            throw DatabaseError.insertFailed(error.localizedDescription)
+        }
+    }
+
+    func fetchTODOItems(forWorktree worktreeId: UUID) throws -> [CheckTODOItem] {
+        let query = checkTodos
+            .filter(todoWorktreeId == worktreeId.uuidString)
+            .order(todoCreatedAt.asc)
+
+        return try db.prepare(query).map { row in
+            CheckTODOItem(
+                id: UUID(uuidString: row[todoId])!,
+                worktreeId: UUID(uuidString: row[todoWorktreeId])!,
+                title: row[todoTitle],
+                isDone: row[todoIsDone],
+                createdAt: Date(timeIntervalSince1970: Double(row[todoCreatedAt]))
+            )
+        }
+    }
+
+    func updateTODOItemDone(id: UUID, isDone: Bool) throws {
+        let row = checkTodos.filter(todoId == id.uuidString)
+        let count = try db.run(row.update(todoIsDone <- isDone))
+        if count == 0 {
+            throw DatabaseError.notFound("TODO item \(id)")
+        }
+    }
+
+    func deleteTODOItem(id: UUID) throws {
+        let row = checkTodos.filter(todoId == id.uuidString)
+        let count = try db.run(row.delete())
+        if count == 0 {
+            throw DatabaseError.notFound("TODO item \(id)")
+        }
     }
 }
