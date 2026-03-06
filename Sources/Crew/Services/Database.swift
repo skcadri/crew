@@ -154,7 +154,7 @@ final class Database {
             t.column(wtRepoId)
             t.column(wtBranch)
             t.column(wtPath)
-            t.column(wtStatus,       defaultValue: WorktreeStatus.idle.rawValue)
+            t.column(wtStatus,       defaultValue: WorktreeStatus.backlog.rawValue)
             t.column(wtSelectedModel)
             t.column(wtCreatedAt)
             t.foreignKey(wtRepoId, references: repos, repoId, delete: .cascade)
@@ -169,6 +169,29 @@ final class Database {
             t.column(msgTimestamp)
             t.foreignKey(msgWorktreeId, references: worktrees, wtId, delete: .cascade)
         })
+
+        try runMigrations()
+    }
+
+    /// Lightweight schema/data migrations for compatible releases.
+    private func runMigrations() throws {
+        // A1 migration: map legacy status values into lifecycle statuses.
+        // This is idempotent and safe to run on every launch.
+        let legacyMappings: [(String, WorktreeStatus)] = [
+            ("idle", .backlog),
+            ("running", .inProgress),
+            ("completed", .done),
+            ("error", .inReview)
+        ]
+
+        for (legacy, mapped) in legacyMappings {
+            let rows = worktrees.filter(wtStatus == legacy)
+            try db.run(rows.update(wtStatus <- mapped.rawValue))
+        }
+
+        // Normalize any unknown statuses to backlog.
+        let validStatuses = WorktreeStatus.allCases.map { "'\($0.rawValue)'" }.joined(separator: ",")
+        try db.run("UPDATE worktrees SET status = ? WHERE status NOT IN (\(validStatuses))", WorktreeStatus.backlog.rawValue)
     }
 
     /// Shared persistence envelopes for A2/A3/A4/A5 integration.
@@ -346,7 +369,7 @@ extension Database {
             repoId:        UUID(uuidString: row[wtRepoId])!,
             branch:        row[wtBranch],
             path:          row[wtPath],
-            status:        WorktreeStatus(rawValue: row[wtStatus]) ?? .idle,
+            status:        WorktreeStatus.fromDatabaseValue(row[wtStatus]),
             selectedModel: row[wtSelectedModel],
             createdAt:     Date(timeIntervalSince1970: Double(row[wtCreatedAt]))
         )
