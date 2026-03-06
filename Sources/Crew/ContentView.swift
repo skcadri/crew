@@ -35,7 +35,11 @@ struct ContentView: View {
                 }
             } detail: {
                 if let worktree = selectedWorktree {
-                    GitPanelView(repoPath: worktree.path)
+                    GitPanelView(
+                        workspaceKey: worktree.id.uuidString,
+                        repoPath: worktree.path,
+                        router: ChecksPanelRouter.shared
+                    )
                 } else {
                     InspectorView(selectedWorkspaceID: selectedWorkspaceID)
                 }

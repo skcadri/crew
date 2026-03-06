@@ -63,13 +63,38 @@ final class Database {
     private let msgContent    = Expression<String>("content")
     private let msgTimestamp  = Expression<Int64>("timestamp")
 
+    // ---- phase_a_checks ----
+    private let phaseAChecks         = Table("phase_a_checks")
+    private let phaseACheckId        = Expression<String>("id")
+    private let phaseACheckWorktreeId = Expression<String>("worktree_id")
+    private let phaseACheckProvider  = Expression<String>("provider")
+    private let phaseACheckExternalId = Expression<String>("external_id")
+    private let phaseACheckPayload   = Expression<String>("payload_json")
+    private let phaseACheckUpdatedAt = Expression<Int64>("updated_at")
+
+    // ---- phase_a_review_state ----
+    private let phaseAReviewStates          = Table("phase_a_review_states")
+    private let phaseAReviewStateId         = Expression<String>("id")
+    private let phaseAReviewStateWorktreeId = Expression<String>("worktree_id")
+    private let phaseAReviewStatePayload    = Expression<String>("payload_json")
+    private let phaseAReviewStateUpdatedAt  = Expression<Int64>("updated_at")
+
+    // ---- phase_a_comments ----
+    private let phaseAComments           = Table("phase_a_comments")
+    private let phaseACommentId          = Expression<String>("id")
+    private let phaseACommentWorktreeId  = Expression<String>("worktree_id")
+    private let phaseACommentProvider    = Expression<String>("provider")
+    private let phaseACommentExternalId  = Expression<String>("external_id")
+    private let phaseACommentPayload     = Expression<String>("payload_json")
+    private let phaseACommentUpdatedAt   = Expression<Int64>("updated_at")
+
     // MARK: Init
 
     private init() {
         let dbPath = Database.databasePath()
         do {
             db = try Connection(dbPath)
-            try createTables()
+            try applyMigrations()
         } catch {
             fatalError("Failed to open/initialise Crew database at \(dbPath): \(error)")
         }
@@ -102,7 +127,18 @@ final class Database {
 
     // MARK: Schema Creation
 
-    private func createTables() throws {
+    private func applyMigrations() throws {
+        try SQLiteMigrationRunner.apply([
+            SQLiteMigration(version: 1, label: "Core schema") { [self] db in
+                try self.createCoreTables(on: db)
+            },
+            SQLiteMigration(version: 2, label: "Phase A integration state") { [self] db in
+                try self.createPhaseAIntegrationTables(on: db)
+            }
+        ], on: db)
+    }
+
+    private func createCoreTables(on db: Connection) throws {
         // repos
         try db.run(repos.create(ifNotExists: true) { t in
             t.column(repoId,        primaryKey: true)
@@ -132,6 +168,41 @@ final class Database {
             t.column(msgContent)
             t.column(msgTimestamp)
             t.foreignKey(msgWorktreeId, references: worktrees, wtId, delete: .cascade)
+        })
+    }
+
+    /// Shared persistence envelopes for A2/A3/A4/A5 integration.
+    /// Services in those tickets can map provider payloads into these tables.
+    private func createPhaseAIntegrationTables(on db: Connection) throws {
+        try db.run(phaseAChecks.create(ifNotExists: true) { t in
+            t.column(phaseACheckId, primaryKey: true)
+            t.column(phaseACheckWorktreeId)
+            t.column(phaseACheckProvider)
+            t.column(phaseACheckExternalId)
+            t.column(phaseACheckPayload)
+            t.column(phaseACheckUpdatedAt)
+            t.foreignKey(phaseACheckWorktreeId, references: worktrees, wtId, delete: .cascade)
+            t.unique(phaseACheckWorktreeId, phaseACheckProvider, phaseACheckExternalId)
+        })
+
+        try db.run(phaseAReviewStates.create(ifNotExists: true) { t in
+            t.column(phaseAReviewStateId, primaryKey: true)
+            t.column(phaseAReviewStateWorktreeId)
+            t.column(phaseAReviewStatePayload)
+            t.column(phaseAReviewStateUpdatedAt)
+            t.foreignKey(phaseAReviewStateWorktreeId, references: worktrees, wtId, delete: .cascade)
+            t.unique(phaseAReviewStateWorktreeId)
+        })
+
+        try db.run(phaseAComments.create(ifNotExists: true) { t in
+            t.column(phaseACommentId, primaryKey: true)
+            t.column(phaseACommentWorktreeId)
+            t.column(phaseACommentProvider)
+            t.column(phaseACommentExternalId)
+            t.column(phaseACommentPayload)
+            t.column(phaseACommentUpdatedAt)
+            t.foreignKey(phaseACommentWorktreeId, references: worktrees, wtId, delete: .cascade)
+            t.unique(phaseACommentWorktreeId, phaseACommentProvider, phaseACommentExternalId)
         })
     }
 }

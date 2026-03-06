@@ -88,11 +88,21 @@ final class GitPanelViewModel: ObservableObject {
 
 /// Inspector panel showing changed files and a unified diff viewer.
 /// Sits in the right inspector column of the main window.
+@MainActor
 struct GitPanelView: View {
 
     @StateObject private var vm: GitPanelViewModel
+    @ObservedObject private var router: ChecksPanelRouter
 
-    init(repoPath: String) {
+    private let workspaceKey: String
+
+    init(
+        workspaceKey: String,
+        repoPath: String,
+        router: ChecksPanelRouter
+    ) {
+        self.workspaceKey = workspaceKey
+        self.router = router
         _vm = StateObject(wrappedValue: GitPanelViewModel(repoPath: repoPath))
     }
 
@@ -105,7 +115,9 @@ struct GitPanelView: View {
                 errorBanner(err)
             }
 
-            if vm.changes.isEmpty && !vm.isLoadingStatus {
+            if selectedTab == .checks {
+                checksPlaceholder
+            } else if vm.changes.isEmpty && !vm.isLoadingStatus {
                 emptyState
             } else {
                 contentSplit
@@ -130,6 +142,17 @@ struct GitPanelView: View {
         }
     }
 
+    private var selectedTab: InspectorPanelTab {
+        router.selectedTab(for: workspaceKey)
+    }
+
+    private var tabBinding: Binding<InspectorPanelTab> {
+        Binding(
+            get: { router.selectedTab(for: workspaceKey) },
+            set: { router.setSelectedTab($0, for: workspaceKey) }
+        )
+    }
+
     // MARK: - Toolbar
 
     private var toolbar: some View {
@@ -137,16 +160,36 @@ struct GitPanelView: View {
             Label("Git", systemImage: "arrow.triangle.branch")
                 .font(.subheadline.weight(.semibold))
 
+            Picker("Inspector tab", selection: tabBinding) {
+                ForEach(InspectorPanelTab.allCases) { tab in
+                    Label(tab.title, systemImage: tab.systemImage).tag(tab)
+                }
+            }
+            .pickerStyle(.segmented)
+            .frame(maxWidth: 240)
+
             Spacer()
 
-            // Changed file count badge
-            if !vm.changes.isEmpty {
-                Text("\(vm.changes.count)")
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.orange, in: Capsule())
+            if selectedTab == .changes {
+                // Changed file count badge
+                if !vm.changes.isEmpty {
+                    Text("\(vm.changes.count)")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.orange, in: Capsule())
+                }
+
+                // Commit
+                Button {
+                    vm.showCommitSheet = true
+                } label: {
+                    Image(systemName: "checkmark.circle")
+                }
+                .buttonStyle(.plain)
+                .disabled(vm.changes.isEmpty)
+                .help("Open commit sheet")
             }
 
             // Refresh
@@ -163,17 +206,7 @@ struct GitPanelView: View {
                     )
             }
             .buttonStyle(.plain)
-            .help("Refresh git status")
-
-            // Commit
-            Button {
-                vm.showCommitSheet = true
-            } label: {
-                Image(systemName: "checkmark.circle")
-            }
-            .buttonStyle(.plain)
-            .disabled(vm.changes.isEmpty)
-            .help("Open commit sheet")
+            .help(selectedTab == .checks ? "Refresh checks panel" : "Refresh git status")
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
@@ -191,6 +224,22 @@ struct GitPanelView: View {
             Text("No uncommitted changes")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var checksPlaceholder: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "checklist")
+                .font(.system(size: 26))
+                .foregroundStyle(.secondary)
+            Text("Checks panel integration ready")
+                .font(.callout.weight(.medium))
+            Text("A2/A3 can plug provider-backed checks into this tab via shared models/adapters.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: 280)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -310,7 +359,11 @@ struct GitPanelView: View {
 
 #if DEBUG
 #Preview("Git Panel — with changes") {
-    GitPanelView(repoPath: "/tmp/fake")
-        .frame(width: 320, height: 600)
+    GitPanelView(
+        workspaceKey: "preview-workspace",
+        repoPath: "/tmp/fake",
+        router: .shared
+    )
+    .frame(width: 320, height: 600)
 }
 #endif
