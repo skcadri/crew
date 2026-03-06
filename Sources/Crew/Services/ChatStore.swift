@@ -1,97 +1,63 @@
 import Foundation
 import Combine
 
-/// Observable store for chat messages in a single worktree.
-/// Handles loading from and persisting to the SQLite database.
 @MainActor
 final class ChatStore: ObservableObject {
-
-    // MARK: - Published state
-
     @Published private(set) var messages: [ChatMessage] = []
-
-    /// True while an agent response is being streamed.
     @Published var isLoading: Bool = false
 
-    /// Persisted plan-mode state for the current workspace chat.
+    // B1 plan mode
     @Published private(set) var planState: PlanState?
 
-    // MARK: - Current worktree
+    // B2 ask-user flow
+    @Published private(set) var pendingQuestion: PendingQuestion?
+    @Published private(set) var isFlowPaused: Bool = false
 
     private(set) var currentWorktreeId: UUID?
 
-    // MARK: - Init
-
     init() {}
 
-    // MARK: - Public API
-
-    /// Loads all messages for the given worktree from SQLite.
     func loadMessages(worktreeId: UUID) {
         currentWorktreeId = worktreeId
         do {
             messages = try Database.shared.fetchMessages(forWorktree: worktreeId)
             planState = try Database.shared.fetchPlanState(forWorktree: worktreeId)
+            pendingQuestion = try Database.shared.fetchPendingQuestion(forWorktree: worktreeId)
+            isFlowPaused = pendingQuestion != nil
         } catch {
             print("[ChatStore] loadMessages error: \(error)")
             messages = []
             planState = nil
+            pendingQuestion = nil
+            isFlowPaused = false
         }
     }
 
-    /// Adds a new message: persists to SQLite and appends to the published array.
-    /// - Parameters:
-    ///   - worktreeId: The owning worktree.
-    ///   - role: `.user` or `.assistant`.
-    ///   - content: Text content of the message.
     @discardableResult
-    func addMessage(
-        worktreeId: UUID,
-        role: MessageRole,
-        content: String
-    ) -> ChatMessage {
-        let message = ChatMessage(
-            worktreeId: worktreeId,
-            role: role,
-            content: content
-        )
-        do {
-            try Database.shared.insertMessage(message)
-        } catch {
-            print("[ChatStore] addMessage persist error: \(error)")
-        }
+    func addMessage(worktreeId: UUID, role: MessageRole, content: String) -> ChatMessage {
+        let message = ChatMessage(worktreeId: worktreeId, role: role, content: content)
+        do { try Database.shared.insertMessage(message) }
+        catch { print("[ChatStore] addMessage persist error: \(error)") }
         messages.append(message)
         return message
     }
 
-    /// Appends text to the last assistant message (streaming update).
-    /// Does **not** persist the intermediate state — call `finaliseStreaming()` when done.
     func appendToLastAssistantMessage(_ text: String) {
-        guard let idx = messages.indices.last(where: { messages[$0].role == .assistant }) else {
-            return
-        }
+        guard let idx = messages.indices.last(where: { messages[$0].role == .assistant }) else { return }
         messages[idx].content += text
     }
 
-    /// Persists the final content of the last assistant message (after streaming completes).
     func finaliseStreaming() {
         guard let msg = messages.last(where: { $0.role == .assistant }) else { return }
-        do {
-            try Database.shared.updateMessage(msg)
-        } catch {
-            print("[ChatStore] finaliseStreaming persist error: \(error)")
-        }
+        do { try Database.shared.updateMessage(msg) }
+        catch { print("[ChatStore] finaliseStreaming persist error: \(error)") }
     }
 
-    var isAwaitingPlanApproval: Bool {
-        planState?.isAwaitingApproval == true
-    }
+    // MARK: B1 plan flow
 
-    var canContinueExecution: Bool {
-        !isAwaitingPlanApproval
-    }
+    var isAwaitingPlanApproval: Bool { planState?.isAwaitingApproval == true }
+    var canContinueExecution: Bool { !isAwaitingPlanApproval }
 
-    /// Start plan mode for the given user prompt and persist awaiting-approval state.
     func startPlanApproval(for prompt: String, worktreeId: UUID) {
         let plan = buildPlan(from: prompt)
         let state = PlanState(
@@ -101,7 +67,6 @@ final class ChatStore: ObservableObject {
             feedback: nil,
             updatedAt: Date()
         )
-
         persistPlanState(state)
         _ = addMessage(worktreeId: worktreeId, role: .assistant, content: plan + "\n\nApprove this plan to continue execution.")
     }
@@ -133,13 +98,6 @@ final class ChatStore: ObservableObject {
         _ = addMessage(worktreeId: worktreeId, role: .user, content: "❌ Plan rejected: \(reasonText)")
     }
 
-    /// Clears all messages for the current worktree from memory only (not DB).
-    func clearMemory() {
-        messages = []
-        planState = nil
-        currentWorktreeId = nil
-    }
-
     private func persistPlanState(_ state: PlanState) {
         do {
             try Database.shared.upsertPlanState(state)
@@ -157,10 +115,40 @@ final class ChatStore: ObservableObject {
         3. Execute only after explicit approval.
         """
     }
+
+    // MARK: B2 ask-user flow
+
+    func setPendingQuestion(worktreeId: UUID, prompt: String) {
+        let question = PendingQuestion(worktreeId: worktreeId, prompt: prompt)
+        do {
+            try Database.shared.upsertPendingQuestion(question)
+            pendingQuestion = question
+            isFlowPaused = true
+            isLoading = false
+        } catch {
+            print("[ChatStore] setPendingQuestion persist error: \(error)")
+        }
+    }
+
+    @discardableResult
+    func submitPendingQuestionResponse(worktreeId: UUID, response: String) -> ChatMessage {
+        let answer = addMessage(worktreeId: worktreeId, role: .user, content: response)
+        do { try Database.shared.clearPendingQuestion(forWorktree: worktreeId) }
+        catch { print("[ChatStore] clearPendingQuestion error: \(error)") }
+        pendingQuestion = nil
+        isFlowPaused = false
+        return answer
+    }
+
+    func clearMemory() {
+        messages = []
+        planState = nil
+        pendingQuestion = nil
+        isFlowPaused = false
+        currentWorktreeId = nil
+    }
 }
 
 private extension String {
-    var nilIfEmpty: String? {
-        isEmpty ? nil : self
-    }
+    var nilIfEmpty: String? { isEmpty ? nil : self }
 }

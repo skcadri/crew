@@ -10,12 +10,6 @@ enum AgentExecutionStage: String, Codable, CaseIterable {
     case completed
 }
 
-enum PlanApprovalStatus: String, Codable, CaseIterable {
-    case draft
-    case approved
-    case approvedWithFeedback = "approved_with_feedback"
-    case rejected
-}
 
 enum WorkspaceSurfaceTab: String, Codable, CaseIterable, Identifiable {
     case plan
@@ -48,7 +42,7 @@ struct PlanDraft: Codable, Hashable {
         id: UUID = UUID(),
         workspaceId: UUID,
         body: String,
-        status: PlanApprovalStatus = .draft,
+        status: PlanApprovalStatus = .none,
         feedback: String? = nil,
         createdAt: Date = Date(),
         updatedAt: Date = Date()

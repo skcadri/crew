@@ -6,6 +6,26 @@ enum MessageRole: String, Codable, CaseIterable {
     case assistant
 }
 
+/// Structured, persisted question that pauses agent flow until answered.
+struct PendingQuestion: Identifiable, Codable, Hashable {
+    var id: UUID
+    var worktreeId: UUID
+    var prompt: String
+    var createdAt: Date
+
+    init(
+        id: UUID = UUID(),
+        worktreeId: UUID,
+        prompt: String,
+        createdAt: Date = Date()
+    ) {
+        self.id = id
+        self.worktreeId = worktreeId
+        self.prompt = prompt
+        self.createdAt = createdAt
+    }
+}
+
 /// A single chat message in a worktree conversation.
 struct ChatMessage: Identifiable, Codable, Hashable {
     var id: UUID

@@ -79,6 +79,13 @@ final class Database {
     private let todoIsDone         = Expression<Bool>("is_done")
     private let todoCreatedAt      = Expression<Int64>("created_at")
 
+    // ---- pending_questions ----
+    private let pendingQuestions      = Table("pending_questions")
+    private let pendingQuestionId     = Expression<String>("id")
+    private let pendingQuestionWTID   = Expression<String>("worktree_id")
+    private let pendingQuestionPrompt = Expression<String>("prompt")
+    private let pendingQuestionAt     = Expression<Int64>("created_at")
+
     // ---- review_file_state ----
     private let reviewFileState    = Table("review_file_state")
     private let rfsWorkspaceId     = Expression<String>("workspace_id")
@@ -167,7 +174,10 @@ final class Database {
             SQLiteMigration(version: 3, label: "Plan mode approval state") { [self] db in
                 try self.createPlanStateTable(on: db)
             },
-            SQLiteMigration(version: 4, label: "Phase B integration state") { [self] db in
+            SQLiteMigration(version: 4, label: "Pending questions") { [self] db in
+                try self.createPendingQuestionTable(on: db)
+            },
+            SQLiteMigration(version: 5, label: "Phase B integration state") { [self] db in
                 try self.createPhaseBIntegrationTables(on: db)
             }
         ], on: db)
@@ -233,6 +243,17 @@ final class Database {
 
         let validStatuses = WorktreeStatus.allCases.map { "'\($0.rawValue)'" }.joined(separator: ",")
         try db.run("UPDATE worktrees SET status = ? WHERE status NOT IN (\(validStatuses))", WorktreeStatus.backlog.rawValue)
+    }
+
+    private func createPendingQuestionTable(on db: Connection) throws {
+        try db.run(pendingQuestions.create(ifNotExists: true) { t in
+            t.column(pendingQuestionId, primaryKey: true)
+            t.column(pendingQuestionWTID)
+            t.column(pendingQuestionPrompt)
+            t.column(pendingQuestionAt)
+            t.foreignKey(pendingQuestionWTID, references: worktrees, wtId, delete: .cascade)
+            t.unique(pendingQuestionWTID)
+        })
     }
 
     /// Shared persistence envelopes for A2/A3/A4/A5 integration.
@@ -619,6 +640,48 @@ extension Database {
                 planUpdatedAt <- now
             ))
         }
+    }
+}
+
+// MARK: - Pending Question CRUD
+
+extension Database {
+
+    func fetchPendingQuestion(forWorktree worktreeId: UUID) throws -> PendingQuestion? {
+        let query = pendingQuestions.filter(pendingQuestionWTID == worktreeId.uuidString)
+        return try db.pluck(query).map { row in
+            PendingQuestion(
+                id: UUID(uuidString: row[pendingQuestionId])!,
+                worktreeId: UUID(uuidString: row[pendingQuestionWTID])!,
+                prompt: row[pendingQuestionPrompt],
+                createdAt: Date(timeIntervalSince1970: Double(row[pendingQuestionAt]))
+            )
+        }
+    }
+
+    func upsertPendingQuestion(_ question: PendingQuestion) throws {
+        let row = pendingQuestions.filter(pendingQuestionWTID == question.worktreeId.uuidString)
+        let now = Int64(question.createdAt.timeIntervalSince1970)
+
+        if try db.pluck(row) != nil {
+            try db.run(row.update(
+                pendingQuestionId <- question.id.uuidString,
+                pendingQuestionPrompt <- question.prompt,
+                pendingQuestionAt <- now
+            ))
+        } else {
+            try db.run(pendingQuestions.insert(
+                pendingQuestionId <- question.id.uuidString,
+                pendingQuestionWTID <- question.worktreeId.uuidString,
+                pendingQuestionPrompt <- question.prompt,
+                pendingQuestionAt <- now
+            ))
+        }
+    }
+
+    func clearPendingQuestion(forWorktree worktreeId: UUID) throws {
+        let row = pendingQuestions.filter(pendingQuestionWTID == worktreeId.uuidString)
+        try db.run(row.delete())
     }
 }
 
