@@ -136,6 +136,16 @@ final class Database {
     private let chatSummaryPayload         = Expression<String>("payload_json")
     private let chatSummaryUpdatedAt       = Expression<Int64>("updated_at")
 
+    // ---- workspace_history_events ----
+    private let workspaceHistoryEvents       = Table("workspace_history_events")
+    private let historyEventId               = Expression<String>("id")
+    private let historyEventWorktreeId       = Expression<String>("worktree_id")
+    private let historyEventType             = Expression<String>("event_type")
+    private let historyEventFromStatus       = Expression<String?>("from_status")
+    private let historyEventToStatus         = Expression<String>("to_status")
+    private let historyEventMetadata         = Expression<String?>("metadata")
+    private let historyEventCreatedAt        = Expression<Int64>("created_at")
+
     // MARK: Init
 
     private init() {
@@ -197,6 +207,9 @@ final class Database {
             },
             SQLiteMigration(version: 7, label: "Chat summaries") { [self] db in
                 try self.createChatSummaryTable(on: db)
+            },
+            SQLiteMigration(version: 8, label: "Workspace history events") { [self] db in
+                try self.createWorkspaceHistoryEventsTable(on: db)
             }
         ], on: db)
     }
@@ -360,6 +373,19 @@ final class Database {
             on: db
         )
     }
+
+    private func createWorkspaceHistoryEventsTable(on db: Connection) throws {
+        try db.run(workspaceHistoryEvents.create(ifNotExists: true) { t in
+            t.column(historyEventId, primaryKey: true)
+            t.column(historyEventWorktreeId)
+            t.column(historyEventType)
+            t.column(historyEventFromStatus)
+            t.column(historyEventToStatus)
+            t.column(historyEventMetadata)
+            t.column(historyEventCreatedAt)
+            t.foreignKey(historyEventWorktreeId, references: worktrees, wtId, delete: .cascade)
+        })
+    }
 }
 
 // MARK: - Phase B Workspace State
@@ -391,6 +417,45 @@ extension Database {
         guard let result = try db.pluck(row) else { return nil }
         let payload = result[phaseBWorkspaceStatePayload]
         return try JSONDecoder().decode(PhaseBWorkspaceState.self, from: Data(payload.utf8))
+    }
+}
+
+// MARK: - Workspace History Events
+
+extension Database {
+    func recordWorkspaceHistoryEvent(_ event: WorkspaceHistoryEvent) throws {
+        try db.run(workspaceHistoryEvents.insert(
+            historyEventId <- event.id.uuidString,
+            historyEventWorktreeId <- event.worktreeId.uuidString,
+            historyEventType <- event.eventType.rawValue,
+            historyEventFromStatus <- event.fromStatus?.rawValue,
+            historyEventToStatus <- event.toStatus.rawValue,
+            historyEventMetadata <- event.metadata,
+            historyEventCreatedAt <- Int64(event.createdAt.timeIntervalSince1970)
+        ))
+    }
+
+    func fetchWorkspaceHistoryEvents(worktreeId: UUID? = nil) throws -> [WorkspaceHistoryEvent] {
+        let scoped = worktreeId.map { workspaceHistoryEvents.filter(historyEventWorktreeId == $0.uuidString) } ?? workspaceHistoryEvents
+        let query = scoped.order(historyEventCreatedAt.desc)
+
+        return try db.prepare(query).compactMap { row in
+            guard let id = UUID(uuidString: row[historyEventId]),
+                  let workspaceId = UUID(uuidString: row[historyEventWorktreeId]),
+                  let eventType = WorkspaceHistoryEventType(rawValue: row[historyEventType]) else {
+                return nil
+            }
+
+            return WorkspaceHistoryEvent(
+                id: id,
+                worktreeId: workspaceId,
+                eventType: eventType,
+                fromStatus: row[historyEventFromStatus].flatMap(WorktreeStatus.init(rawValue:)),
+                toStatus: WorktreeStatus.fromDatabaseValue(row[historyEventToStatus]),
+                metadata: row[historyEventMetadata],
+                createdAt: Date(timeIntervalSince1970: Double(row[historyEventCreatedAt]))
+            )
+        }
     }
 }
 
@@ -475,6 +540,15 @@ extension Database {
         )
         do {
             try db.run(insert)
+            try recordWorkspaceHistoryEvent(
+                WorkspaceHistoryEvent(
+                    worktreeId: wt.id,
+                    eventType: .created,
+                    fromStatus: nil,
+                    toStatus: wt.status,
+                    metadata: "Workspace created"
+                )
+            )
         } catch {
             throw DatabaseError.insertFailed(error.localizedDescription)
         }
@@ -513,10 +587,40 @@ extension Database {
 
     func updateWorktreeStatus(id: UUID, status: WorktreeStatus) throws {
         let row = worktrees.filter(wtId == id.uuidString)
+        guard let existing = try db.pluck(row) else {
+            throw DatabaseError.notFound("Worktree \(id)")
+        }
+
+        let previous = WorktreeStatus.fromDatabaseValue(existing[wtStatus])
         let count = try db.run(row.update(wtStatus <- status.rawValue))
         if count == 0 {
             throw DatabaseError.notFound("Worktree \(id)")
         }
+
+        guard previous != status else { return }
+
+        let eventType: WorkspaceHistoryEventType
+        let metadata: String
+        if status == .archived {
+            eventType = .archived
+            metadata = "Workspace archived"
+        } else if previous == .archived {
+            eventType = .unarchived
+            metadata = "Workspace restored from archive"
+        } else {
+            eventType = .statusChanged
+            metadata = "Status changed from \(previous.title) to \(status.title)"
+        }
+
+        try recordWorkspaceHistoryEvent(
+            WorkspaceHistoryEvent(
+                worktreeId: id,
+                eventType: eventType,
+                fromStatus: previous,
+                toStatus: status,
+                metadata: metadata
+            )
+        )
     }
 
     func deleteWorktree(id: UUID) throws {

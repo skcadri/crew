@@ -13,6 +13,7 @@ struct ContentView: View {
 
     private var windowTitle: String {
         guard let id = selectedWorkspaceID else { return "Crew" }
+        if id == "history-center" { return "History & Archive Center" }
         if let wt = selectedWorktree { return wt.branch }
         if id.hasPrefix("repo-") { return id.replacingOccurrences(of: "repo-", with: "") }
         return id
@@ -23,7 +24,9 @@ struct ContentView: View {
             NavigationSplitView(columnVisibility: $columnVisibility) {
                 SidebarView(selectedWorkspaceID: $selectedWorkspaceID)
             } content: {
-                if let worktree = selectedWorktree {
+                if isHistoryCenterSelected {
+                    HistoryArchiveCenterView()
+                } else if let worktree = selectedWorktree {
                     let store = chatStore(for: worktree)
                     ChatView(
                         store: store,
@@ -35,7 +38,9 @@ struct ContentView: View {
                     DetailPlaceholder(selectedWorkspaceID: selectedWorkspaceID)
                 }
             } detail: {
-                if let worktree = selectedWorktree {
+                if isHistoryCenterSelected {
+                    EmptyView()
+                } else if let worktree = selectedWorktree {
                     WorkspaceInspectorTabsView(repoPath: worktree.path, worktreeId: worktree.id)
                 } else {
                     InspectorView(selectedWorkspaceID: selectedWorkspaceID)
@@ -69,6 +74,10 @@ struct ContentView: View {
     }
 
     // MARK: - Helpers
+
+    private var isHistoryCenterSelected: Bool {
+        selectedWorkspaceID == "history-center"
+    }
 
     private var selectedRepo: Repository? {
         guard let id = selectedWorkspaceID else { return repoManager.repos.first }
