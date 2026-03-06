@@ -5,6 +5,17 @@ import AppKit
 
 @MainActor
 final class GitPanelViewModel: ObservableObject {
+    enum PanelMode: String, CaseIterable {
+        case diff
+        case editor
+
+        var title: String {
+            switch self {
+            case .diff: return "Diff"
+            case .editor: return "Editor"
+            }
+        }
+    }
     @Published var changes: [FileChange] = []
     @Published var selectedFile: FileChange? = nil
     @Published var diffText: String = ""
@@ -16,6 +27,11 @@ final class GitPanelViewModel: ObservableObject {
     @Published var viewedFiles: Set<String> = []
     @Published var reviewNotesByFile: [String: String] = [:]
     @Published var reviewSummary: String = ""
+    @Published var panelMode: PanelMode = .diff
+    @Published var editorText: String = ""
+    @Published var isSavingEditor: Bool = false
+    @Published var editorDirty: Bool = false
+    @Published var editorError: String? = nil
 
     // Toast
     @Published var toastMessage: String? = nil
@@ -55,14 +71,20 @@ final class GitPanelViewModel: ObservableObject {
             try? Database.shared.clearViewedFiles(workspaceId: workspaceId, keeping: paths)
 
             // Re-load diff for selected file if it's still present
-            if let sel = selectedFile, newChanges.contains(sel) {
-                await loadDiff(for: sel)
+            if let sel = selectedFile, let refreshedSelection = newChanges.first(where: { $0.path == sel.path }) {
+                selectedFile = refreshedSelection
+                await loadDiff(for: refreshedSelection)
+                await loadEditor(for: refreshedSelection)
             } else if let first = newChanges.first {
                 selectedFile = first
                 await loadDiff(for: first)
+                await loadEditor(for: first)
             } else {
                 selectedFile = nil
                 diffText = ""
+                editorText = ""
+                editorDirty = false
+                editorError = nil
             }
         } catch {
             errorMessage = error.localizedDescription
@@ -73,7 +95,10 @@ final class GitPanelViewModel: ObservableObject {
 
     func select(_ change: FileChange) {
         selectedFile = change
-        Task { await loadDiff(for: change) }
+        Task {
+            await loadDiff(for: change)
+            await loadEditor(for: change)
+        }
     }
 
     // MARK: Viewed State
@@ -149,6 +174,68 @@ final class GitPanelViewModel: ObservableObject {
             diffText = try await GitService.diff(repoPath: repoPath, file: change.path)
         } catch {
             diffText = "# Error loading diff: \(error.localizedDescription)"
+        }
+    }
+
+    func updateEditorText(_ newValue: String) {
+        editorText = newValue
+        editorDirty = selectedFile != nil
+    }
+
+    func saveSelectedFile() async {
+        guard let file = selectedFile else { return }
+        guard file.status != .deleted else {
+            editorError = "Deleted files cannot be edited."
+            return
+        }
+
+        let fileURL = URL(fileURLWithPath: repoPath).appendingPathComponent(file.path)
+
+        isSavingEditor = true
+        defer { isSavingEditor = false }
+
+        do {
+            try editorText.write(to: fileURL, atomically: true, encoding: .utf8)
+            editorDirty = false
+            editorError = nil
+
+            await refresh()
+            if let reselection = changes.first(where: { $0.path == file.path }) {
+                selectedFile = reselection
+                await loadDiff(for: reselection)
+                await loadEditor(for: reselection)
+            }
+            showToast("Saved \(file.path)")
+        } catch {
+            editorError = error.localizedDescription
+        }
+    }
+
+    private func loadEditor(for change: FileChange) async {
+        if change.status == .deleted {
+            editorText = ""
+            editorDirty = false
+            editorError = "Deleted files cannot be edited."
+            return
+        }
+
+        let fileURL = URL(fileURLWithPath: repoPath).appendingPathComponent(change.path)
+
+        do {
+            let data = try Data(contentsOf: fileURL)
+            if let decoded = String(data: data, encoding: .utf8) {
+                editorText = decoded
+                editorDirty = false
+                editorError = nil
+            } else {
+                editorText = ""
+                editorDirty = false
+                editorError = "This file is not UTF-8 text and cannot be edited here."
+            }
+        } catch {
+            editorText = ""
+            editorDirty = false
+            editorError = error.localizedDescription
         }
     }
 
@@ -364,6 +451,14 @@ struct GitPanelView: View {
                                 .truncationMode(.middle)
                             Spacer()
 
+                            Picker("Panel mode", selection: $vm.panelMode) {
+                                ForEach(GitPanelViewModel.PanelMode.allCases, id: \.self) { mode in
+                                    Text(mode.title).tag(mode)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .frame(width: 150)
+
                             Button(vm.viewedFiles.contains(file.path) ? "Viewed" : "Mark viewed") {
                                 vm.toggleViewed(for: file.path)
                             }
@@ -389,7 +484,66 @@ struct GitPanelView: View {
 
                         Divider()
                     }
-                    DiffView(diffText: vm.diffText)
+
+                    if let file = vm.selectedFile, vm.panelMode == .editor {
+                        VStack(spacing: 0) {
+                            if let err = vm.editorError {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundStyle(.orange)
+                                    Text(err)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 6)
+                                .background(Color.orange.opacity(0.08))
+
+                                Divider()
+                            }
+
+                            HStack(spacing: 8) {
+                                Text("Manual Mode")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.secondary)
+
+                                if vm.editorDirty {
+                                    Text("Unsaved")
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(.orange)
+                                }
+
+                                Spacer()
+
+                                Button {
+                                    Task { await vm.saveSelectedFile() }
+                                } label: {
+                                    Label(vm.isSavingEditor ? "Saving…" : "Save", systemImage: "square.and.arrow.down")
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .controlSize(.mini)
+                                .disabled(vm.isSavingEditor || vm.editorError != nil)
+                                .keyboardShortcut("s", modifiers: .command)
+                                .help("Save file (⌘S) and refresh git diff")
+                            }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 6)
+
+                            Divider()
+
+                            ManualCodeEditorView(
+                                text: Binding(
+                                    get: { vm.editorText },
+                                    set: { vm.updateEditorText($0) }
+                                ),
+                                filePath: file.path,
+                                isEditable: vm.editorError == nil
+                            )
+                        }
+                    } else {
+                        DiffView(diffText: vm.diffText)
+                    }
                 }
             }
         }
@@ -416,6 +570,7 @@ struct GitPanelView: View {
         .padding(8)
         .background(Color.orange.opacity(0.12))
     }
+
 
     // MARK: - Toast
 
