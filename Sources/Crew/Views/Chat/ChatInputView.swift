@@ -10,17 +10,20 @@ struct ChatInputView: View {
 
     @Binding var text: String
     let isProcessing: Bool
+    let isInputLocked: Bool
     let modelName: String?
     let onSend: () -> Void
 
     init(
         text: Binding<String>,
         isProcessing: Bool,
+        isInputLocked: Bool = false,
         modelName: String? = nil,
         onSend: @escaping () -> Void
     ) {
         self._text = text
         self.isProcessing = isProcessing
+        self.isInputLocked = isInputLocked
         self.modelName = modelName
         self.onSend = onSend
     }
@@ -33,7 +36,7 @@ struct ChatInputView: View {
                 // Multi-line input
                 ChatTextEditor(
                     text: $text,
-                    isDisabled: isProcessing,
+                    isDisabled: isProcessing || isInputLocked,
                     onSend: handleSend
                 )
                 .frame(minHeight: 36, maxHeight: 120)
@@ -43,7 +46,7 @@ struct ChatInputView: View {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color(nsColor: .separatorColor), lineWidth: 0.5)
                 )
-                .disabled(isProcessing)
+                .disabled(isProcessing || isInputLocked)
 
                 // Send button
                 Button(action: handleSend) {
@@ -77,7 +80,7 @@ struct ChatInputView: View {
     // MARK: - Helpers
 
     private var canSend: Bool {
-        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isProcessing
+        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isProcessing && !isInputLocked
     }
 
     private func handleSend() {
@@ -187,6 +190,7 @@ private final class ChatNSTextView: NSTextView {
     ChatInputView(
         text: $text,
         isProcessing: false,
+        isInputLocked: false,
         modelName: "claude-sonnet-4",
         onSend: { print("send: \(text)"); text = "" }
     )

@@ -53,7 +53,7 @@ final class DatabaseTests: XCTestCase {
         let fetched = try db.fetchWorktree(id: wt.id)
         XCTAssertNotNil(fetched)
         XCTAssertEqual(fetched?.branch, "feature/test")
-        XCTAssertEqual(fetched?.status, .idle)
+        XCTAssertEqual(fetched?.status, .backlog)
     }
 
     func testUpdateWorktreeStatus() throws {
@@ -64,9 +64,9 @@ final class DatabaseTests: XCTestCase {
         let wt = Worktree(repoId: repo.id, branch: "main", path: "/tmp/status-wt")
         try db.insertWorktree(wt)
 
-        try db.updateWorktreeStatus(id: wt.id, status: .running)
+        try db.updateWorktreeStatus(id: wt.id, status: .inProgress)
         let fetched = try db.fetchWorktree(id: wt.id)
-        XCTAssertEqual(fetched?.status, .running)
+        XCTAssertEqual(fetched?.status, .inProgress)
     }
 
     // MARK: - ChatMessage Tests
@@ -125,6 +125,31 @@ final class DatabaseTests: XCTestCase {
 
         XCTAssertTrue(aViewed.contains(path))
         XCTAssertFalse(bViewed.contains(path))
+    }
+
+    // MARK: - Plan Mode State Tests
+
+    func testPlanStatePersistsPerWorktree() throws {
+        let repo = Repository(name: "plan-repo", url: "https://github.com/example/plan", localPath: "/tmp/plan-repo")
+        try db.insertRepository(repo)
+        defer { try? db.deleteRepository(id: repo.id) }
+
+        let wt = Worktree(repoId: repo.id, branch: "plan-mode", path: "/tmp/plan-wt")
+        try db.insertWorktree(wt)
+
+        let initial = PlanState(worktreeId: wt.id, status: .awaitingApproval, planText: "Draft", feedback: nil)
+        try db.upsertPlanState(initial)
+
+        var fetched = try db.fetchPlanState(forWorktree: wt.id)
+        XCTAssertEqual(fetched?.status, .awaitingApproval)
+        XCTAssertEqual(fetched?.planText, "Draft")
+
+        let updated = PlanState(worktreeId: wt.id, status: .approved, planText: "Draft", feedback: "Ship it")
+        try db.upsertPlanState(updated)
+
+        fetched = try db.fetchPlanState(forWorktree: wt.id)
+        XCTAssertEqual(fetched?.status, .approved)
+        XCTAssertEqual(fetched?.feedback, "Ship it")
     }
 
     // MARK: - AgentType Tests
