@@ -50,6 +50,11 @@ struct SidebarView: View {
                 }
             }
 
+            Section("History") {
+                Label("History & Archive Center", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                    .tag("history-center")
+            }
+
             if filteredWorktrees.isEmpty {
                 Section("Workspaces") {
                     Label("No matching workspaces", systemImage: "line.3.horizontal.decrease.circle")
